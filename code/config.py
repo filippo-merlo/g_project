@@ -87,7 +87,7 @@ for i in types_learning:
 						pass
 					else:
 						types_logical.append(i+' '+j+' '+h)
-types_logical_with_learning = types_learning + types_logical 
+types_logical_with_learning =  types_logical + types_learning 
 
 from itertools import product
 from pprint import pprint

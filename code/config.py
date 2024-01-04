@@ -108,7 +108,6 @@ for v in dic_train_logical.values():
 		if n not in others:
 			all_vocabs.append(n)
 
-ygdsuy = 0
 #print(all_vocabs)
 #pprint(dic_train_logical)
 #print(types_logical_with_learning)

@@ -167,6 +167,7 @@ def my_clip_train(in_path, out_path, model_name, source, in_base,
 
 	best_nt = 0
 	t_tot = 0
+	i = 'damn'
 	#for i in range(epochs):
 	for tl in types_logical_with_learning:  # attr
 		random.shuffle(dic[tl])

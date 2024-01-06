@@ -167,26 +167,26 @@ def my_clip_train(in_path, out_path, model_name, source, in_base,
 
 	best_nt = 0
 	t_tot = 0
-	for i in range(epochs):
-		for tl in types_logical_with_learning:  # attr
-			random.shuffle(dic[tl])
-			for vi in dic[tl]:  # lesson
-				print("#################### Learning: " + str(i) + " ----- " + str(vi))
-				t_start = time.time()
-				memory = my_train_clip_encoder(dt, memory, tl, vi)
-				t_end = time.time()
-				t_dur = t_end - t_start
-				t_tot += t_dur
-				print("Time: ", t_dur, t_tot)
+	#for i in range(epochs):
+	for tl in types_logical_with_learning:  # attr
+		random.shuffle(dic[tl])
+		for vi in dic[tl]:  # lesson
+			print("#################### Learning: " + str(i) + " ----- " + str(vi))
+			t_start = time.time()
+			memory = my_train_clip_encoder(dt, memory, tl, vi)
+			t_end = time.time()
+			t_dur = t_end - t_start
+			t_tot += t_dur
+			print("Time: ", t_dur, t_tot)
 
-				# evaluate
-				top_nt = my_clip_evaluation(in_path, 'novel_test/', memory,
-								bsn_novel_test_1, ['rgba'], dic_train, vocab)
-				if top_nt > best_nt:
-					best_nt = top_nt
-					print("++++++++++++++ BEST NT: " + str(best_nt))
-					with open(os.path.join(out_path, model_name), 'wb') as handle:
-						pickle.dump(memory, handle, protocol=pickle.HIGHEST_PROTOCOL)
+			## evaluate
+			#top_nt = my_clip_evaluation(in_path, 'novel_test/', memory,
+			#				bsn_novel_test_1, ['rgba'], dic_train, vocab)
+			#if top_nt > best_nt:
+			#	best_nt = top_nt
+			#	print("++++++++++++++ BEST NT: " + str(best_nt))
+			with open(os.path.join(out_path, model_name), 'wb') as handle:
+				pickle.dump(memory, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 if __name__ == "__main__":

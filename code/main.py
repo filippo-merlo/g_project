@@ -202,4 +202,4 @@ if __name__ == "__main__":
 	args = argparser.parse_args()
 
 	my_clip_train(args.in_path, args.out_path, args.model_name,
-				'novel_train/', bn_n_train, ['rgba'], dic_train_logical, all_vocabs, args.pre_train)
+				'train/', bn_train, ['rgba'], dic_train_logical, all_vocabs, args.pre_train)

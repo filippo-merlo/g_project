@@ -181,11 +181,11 @@ def my_clip_train(in_path, out_path, model_name, source, in_base,
 			print("Time: ", t_dur, t_tot)
 
 			## evaluate
-			#top_nt = my_clip_evaluation(in_path, 'novel_test/', memory,
-			#				bsn_novel_test_1, ['rgba'], dic_train, vocab)
-			#if top_nt > best_nt:
-			#	best_nt = top_nt
-			#	print("++++++++++++++ BEST NT: " + str(best_nt))
+			top_nt = my_clip_evaluation(in_path, 'novel_test/', memory,
+							bsn_novel_test_1, ['rgba'], dic_train, vocab)
+			if top_nt > best_nt:
+				best_nt = top_nt
+				print("++++++++++++++ BEST NT: " + str(best_nt))
 			with open(os.path.join(out_path, model_name), 'wb') as handle:
 				pickle.dump(memory, handle, protocol=pickle.HIGHEST_PROTOCOL)
 

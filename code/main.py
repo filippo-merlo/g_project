@@ -195,7 +195,7 @@ if __name__ == "__main__":
 				help='Data input path', required=True)
 	argparser.add_argument('--out_path', '-o',
 				help='Model memory output path', required=True)
-	argparser.add_argument('--model_name', '-n', default='short_best_mem.pickle',
+	argparser.add_argument('--model_name', '-n', default='long_best_mem.pickle',
 				help='Best model memory to be saved file name', required=False)
 	argparser.add_argument('--pre_train', '-p', default=None,
 				help='Pretrained model import name (saved in outpath)', required=False)

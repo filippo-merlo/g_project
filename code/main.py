@@ -168,27 +168,26 @@ def my_clip_train(in_path, out_path, model_name, source, in_base,
 	best_nt = 0
 	t_tot = 0
 	i = 'damn'
-	#for i in range(epochs):
-	for tl in types_logical_with_learning:  # attr
-		random.shuffle(dic[tl])
-		for vi in dic[tl]:  # lesson
-			print("#################### Learning: " + str(i) + " ----- " + str(vi))
-			t_start = time.time()
-			memory = my_train_clip_encoder(dt, memory, tl, vi)
-			t_end = time.time()
-			t_dur = t_end - t_start
-			t_tot += t_dur
-			print("Time: ", t_dur, t_tot)
+	for i in range(epochs):
+		for tl in short_types_logical_with_learning:  # attr
+			random.shuffle(dic[tl])
+			for vi in dic[tl]:  # lesson
+				print("#################### Learning: " + str(i) + " ----- " + str(vi))
+				t_start = time.time()
+				memory = my_train_clip_encoder(dt, memory, tl, vi)
+				t_end = time.time()
+				t_dur = t_end - t_start
+				t_tot += t_dur
+				print("Time: ", t_dur, t_tot)
 
-			## evaluate
-			#top_nt = my_clip_evaluation(in_path, 'novel_test/', memory,
-			#				bsn_novel_test_1, ['rgba'], dic_train, vocab)
-			#if top_nt > best_nt:
-			#	best_nt = top_nt
-			#	print("++++++++++++++ BEST NT: " + str(best_nt))
-			with open(os.path.join(out_path, model_name), 'wb') as handle:
-				pickle.dump(memory, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
+				## evaluate
+				#top_nt = my_clip_evaluation(in_path, 'novel_test/', memory,
+				#				bsn_novel_test_1, ['rgba'], dic_train, vocab)
+				#if top_nt > best_nt:
+				#	best_nt = top_nt
+				#	print("++++++++++++++ BEST NT: " + str(best_nt))
+				with open(os.path.join(out_path, model_name), 'wb') as handle:
+					pickle.dump(memory, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 if __name__ == "__main__":
 	argparser = argparse.ArgumentParser()
@@ -196,11 +195,11 @@ if __name__ == "__main__":
 				help='Data input path', required=True)
 	argparser.add_argument('--out_path', '-o',
 				help='Model memory output path', required=True)
-	argparser.add_argument('--model_name', '-n', default='best_mem.pickle',
+	argparser.add_argument('--model_name', '-n', default='short_best_mem.pickle',
 				help='Best model memory to be saved file name', required=False)
 	argparser.add_argument('--pre_train', '-p', default=None,
 				help='Pretrained model import name (saved in outpath)', required=False)
 	args = argparser.parse_args()
 
 	my_clip_train(args.in_path, args.out_path, args.model_name,
-				'train/', bn_train, ['rgba'], dic_train_logical, all_vocabs, args.pre_train)
+				'train/', bn_train, ['rgba'], short_dic_train_logical, all_vocabs, args.pre_train)

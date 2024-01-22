@@ -108,6 +108,28 @@ for v in dic_train_logical.values():
 		if n not in others:
 			all_vocabs.append(n)
 
+# to make training shorter
+import random as rn 
+rn.seed(42)
+
+short_types_logical_with_learning = [
+ 'color and material',
+ 'color and shape',
+ 'color or material',
+ 'color or shape',
+ 'not color',
+ 'material and shape',
+ 'material or shape',
+ 'not material',
+ 'not shape']
+
+short_dic_train_logical = dic_train_logical.copy()
+for k in short_types_logical_with_learning:
+    if len(dic_train_logical[k]) > 5:
+        short_dic_train_logical[k] = rn.sample(dic_train_logical[k], 5)
+
+short_types_logical_with_learning += types_learning
+
 #print(all_vocabs)
 #pprint(dic_train_logical)
 #print(types_logical_with_learning)
@@ -133,7 +155,7 @@ bsn_test_2_old = "bsn_test_2_old.txt"
 # train parameters
 resize = 224
 lr = 1e-3
-epochs = 50
+epochs = 5
 
 sim_batch = 132
 gen_batch = 132

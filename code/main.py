@@ -169,7 +169,7 @@ def my_clip_train(in_path, out_path, model_name, source, in_base,
 	t_tot = 0
 	i = 'damn'
 	for i in range(epochs):
-		for tl in short_types_logical_with_learning:  # attr
+		for tl in types_logical_with_learning:  # attr
 			random.shuffle(dic[tl])
 			for vi in dic[tl]:  # lesson
 				print("#################### Learning: " + str(i) + " ----- " + str(vi))
@@ -202,4 +202,4 @@ if __name__ == "__main__":
 	args = argparser.parse_args()
 
 	my_clip_train(args.in_path, args.out_path, args.model_name,
-				'train/', bn_train, ['rgba'], short_dic_train_logical, all_vocabs, args.pre_train)
+				'train/', bn_train, ['rgba'], dic_train_logical, all_vocabs, args.pre_train)

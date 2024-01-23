@@ -99,6 +99,14 @@ def my_clip_train(in_path, out_path, n_split, model_name, source, in_base,
 		learning_list = types_logical_with_learning_2
 	elif n_split == '3':
 		learning_list = types_logical_with_learning_3
+	elif n_split == '4':
+		learning_list = types_logical_with_learning_4
+	elif n_split == '5':
+		learning_list = types_logical_with_learning_5
+	elif n_split == '6':
+		learning_list = types_logical_with_learning_6
+	elif n_split == '7':
+		learning_list = types_logical_with_learning_7
 
 	for i in range(epochs):
 		for tl in learning_list:  # attr

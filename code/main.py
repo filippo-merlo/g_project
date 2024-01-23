@@ -20,8 +20,6 @@ from config import *
 from dataset import *
 from models import *
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-
 def my_train_clip_encoder(dt, memory, attr, lesson):
 	# get model
 	clip_model, clip_preprocess = clip.load("ViT-B/32", device=device)
@@ -76,9 +74,7 @@ def my_train_clip_encoder(dt, memory, attr, lesson):
 	return memory
 
 def my_clip_train(in_path, out_path, n_split, model_name, source, in_base,
-				types, dic, vocab, pre_trained_model=None):
-	if n_split != '0':
-		os.environ["CUDA_VISIBLE_DEVICES"] = str(int(n_split)-1)  	
+				types, dic, vocab, pre_trained_model=None):  	
 	# get data
 	clip_model, clip_preprocess = clip.load("ViT-B/32", device=device)
 	dt = MyDataset(in_path, source, in_base, types, dic, vocab,
@@ -134,6 +130,11 @@ if __name__ == "__main__":
 				help='Pretrained model import name (saved in outpath)', required=False)
 	
 	args = argparser.parse_args()
-
+	device = "cuda" if torch.cuda.is_available() else "cpu"
+	if args.n_split != '0':
+		gpu_index = int(args.n_split)-1
+		torch.cuda.set_device(gpu_index)
+		print('gpu:',gpu_index)
+		
 	my_clip_train(args.in_path, args.out_path, args.n_split, args.model_name,
 				'train/', bn_train, ['rgba'], dic_train_logical, all_vocabs, args.pre_train)

@@ -91,7 +91,6 @@ def my_clip_train(in_path, out_path, n_split, model_name, source, in_base,
 		memory = pickle.load(infile)
 		infile.close()
 
-	best_nt = 0
 	t_tot = 0
 	if n_split == 0:
 		learning_list = types_logical_with_learning
@@ -114,7 +113,7 @@ def my_clip_train(in_path, out_path, n_split, model_name, source, in_base,
 				t_tot += t_dur
 
 				print("Time: ", t_dur, t_tot)
-				with open(os.path.join(out_path, model_name+'_'+str(n_split)), 'wb') as handle:
+				with open(os.path.join(out_path, model_name+'_'+str(n_split)+'.pickle'), 'wb') as handle:
 					pickle.dump(memory, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 if __name__ == "__main__":
@@ -125,12 +124,12 @@ if __name__ == "__main__":
 				help='Model memory output path', required=True)
 	argparser.add_argument('--n_split', '-s', default=0,
 				help='Split number', required=None)
-	argparser.add_argument('--model_name', '-n', default=f'my_best_mem.pickle',
+	argparser.add_argument('--model_name', '-n', default='my_best_mem',
 				help='Best model memory to be saved file name', required=False)
 	argparser.add_argument('--pre_train', '-p', default=None,
 				help='Pretrained model import name (saved in outpath)', required=False)
 	
 	args = argparser.parse_args()
 
-	my_clip_train(args.in_path, args.out_path, args.model_name,
+	my_clip_train(args.in_path, args.out_path, args.n_split, args.model_name,
 				'train/', bn_train, ['rgba'], dic_train_logical, all_vocabs, args.pre_train)

@@ -77,6 +77,9 @@ def my_train_clip_encoder(dt, memory, attr, lesson):
 
 def my_clip_train(in_path, out_path, n_split, model_name, source, in_base,
 				types, dic, vocab, pre_trained_model=None):
+	if n_split != '0':
+		os.environ["CUDA_VISIBLE_DEVICES"] = str(int(n_split)-1)  
+		
 	# get data
 	clip_model, clip_preprocess = clip.load("ViT-B/32", device=device)
 	dt = MyDataset(in_path, source, in_base, types, dic, vocab,

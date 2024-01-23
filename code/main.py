@@ -92,13 +92,15 @@ def my_clip_train(in_path, out_path, n_split, model_name, source, in_base,
 		infile.close()
 
 	t_tot = 0
-	if n_split == 0:
+
+
+	if n_split == '0':
 		learning_list = types_logical_with_learning
-	elif n_split == 1:
+	elif n_split == '1':
 		learning_list = types_logical_with_learning_1
-	elif n_split == 2:	
+	elif n_split == '2':	
 		learning_list = types_logical_with_learning_2
-	elif n_split == 3:
+	elif n_split == '3':
 		learning_list = types_logical_with_learning_3
 
 	for i in range(epochs):

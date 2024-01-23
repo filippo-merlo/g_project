@@ -11,12 +11,16 @@ from PIL import Image
 
 from torch.utils.data import DataLoader
 
+import torch.multiprocessing as mp
+from torch.utils.data.distributed import DistributedSampler
+from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.distributed import init_process_group, destroy_process_group
+
 from config import *
 from dataset import *
 from models import *
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-
 
 def my_train_clip_encoder(dt, memory, attr, lesson):
 	# get model
@@ -71,85 +75,7 @@ def my_train_clip_encoder(dt, memory, attr, lesson):
 						}
 	return memory
 
-
-def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
-	with torch.no_grad():
-		# get vocab dictionary
-		if source == 'train':
-			dic = dic_test
-		else:
-			dic = dic_train
-
-		# get dataset
-		clip_model, clip_preprocess = clip.load("ViT-B/32", device=device)
-		dt = MyDataset(in_path, source, in_base, types, dic, vocab,
-					clip_preprocessor=clip_preprocess)
-		data_loader = DataLoader(dt, batch_size=132, shuffle=True)
-
-		top3 = 0
-		top3_color = 0
-		top3_material = 0
-		top3_shape = 0
-		tot_num = 0
-
-		for base_is, images in data_loader: # labels (one hot), images (clip embs)
-			# Prepare the inputs
-			images = images.to(device)
-			ans = []
-			batch_size_i = len(base_is)
-
-			# go through memory
-			for label in vocab: # select a label es 'red'
-				if label not in memory.keys():
-					ans.append(torch.full((batch_size_i, 1), 1000.0).squeeze(1))
-					continue
-
-				# load model
-				model = CLIP_AE_Encode(hidden_dim_clip, latent_dim, isAE=False)
-				model.load_state_dict(memory[label]['model']) # load weights corresponding to red
-				model.to(device)
-				model.eval() # freeze
-
-				# load centroid
-				centroid_i = memory[label]['centroid'].to(device)
-				centroid_i = centroid_i.repeat(batch_size_i, 1)
-
-				# compute stats
-				z = model(clip_model, images).squeeze(0)
-				disi = ((z - centroid_i)**2).mean(dim=1)
-				ans.append(disi.detach().to('cpu'))
-
-			# get top3 indices
-			ans = torch.stack(ans, dim=1)
-			values, indices = ans.topk(3, largest=False)
-			_, indices_lb = base_is.topk(3) 
-			indices_lb, _ = torch.sort(indices_lb)
-
-			# calculate stats
-			tot_num += len(indices)
-			for bi in range(len(indices)):
-				ci = 0
-				mi = 0
-				si = 0
-				if indices_lb[bi][0] in indices[bi]:
-					ci = 1
-				if indices_lb[bi][1] in indices[bi]:
-					mi = 1
-				if indices_lb[bi][2] in indices[bi]:
-					si = 1
-					
-				top3_color += ci
-				top3_material += mi
-				top3_shape += si
-				if (ci == 1) and (mi == 1) and (si == 1):
-					top3 += 1
-
-		print(tot_num, top3_color/tot_num, top3_material/tot_num,
-				top3_shape/tot_num, top3/tot_num)
-	return top3/tot_num
-
-
-def my_clip_train(in_path, out_path, model_name, source, in_base,
+def my_clip_train(in_path, out_path, n_split, model_name, source, in_base,
 				types, dic, vocab, pre_trained_model=None):
 	# get data
 	clip_model, clip_preprocess = clip.load("ViT-B/32", device=device)
@@ -167,9 +93,17 @@ def my_clip_train(in_path, out_path, model_name, source, in_base,
 
 	best_nt = 0
 	t_tot = 0
-	i = 'damn'
+	if n_split == 0:
+		learning_list = types_logical_with_learning
+	elif n_split == 1:
+		learning_list = types_logical_with_learning_1
+	elif n_split == 2:	
+		learning_list = types_logical_with_learning_2
+	elif n_split == 3:
+		learning_list = types_logical_with_learning_3
+
 	for i in range(epochs):
-		for tl in types_logical_with_learning:  # attr
+		for tl in learning_list:  # attr
 			random.shuffle(dic[tl])
 			for vi in dic[tl]:  # lesson
 				print("#################### Learning: " + str(i) + " ----- " + str(vi))
@@ -178,15 +112,9 @@ def my_clip_train(in_path, out_path, model_name, source, in_base,
 				t_end = time.time()
 				t_dur = t_end - t_start
 				t_tot += t_dur
-				print("Time: ", t_dur, t_tot)
 
-				## evaluate
-				#top_nt = my_clip_evaluation(in_path, 'novel_test/', memory,
-				#				bsn_novel_test_1, ['rgba'], dic_train, vocab)
-				#if top_nt > best_nt:
-				#	best_nt = top_nt
-				#	print("++++++++++++++ BEST NT: " + str(best_nt))
-				with open(os.path.join(out_path, model_name), 'wb') as handle:
+				print("Time: ", t_dur, t_tot)
+				with open(os.path.join(out_path, model_name+'_'+str(n_split)), 'wb') as handle:
 					pickle.dump(memory, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 if __name__ == "__main__":
@@ -195,10 +123,13 @@ if __name__ == "__main__":
 				help='Data input path', required=True)
 	argparser.add_argument('--out_path', '-o',
 				help='Model memory output path', required=True)
-	argparser.add_argument('--model_name', '-n', default='long_best_mem.pickle',
+	argparser.add_argument('--n_split', '-s', default=0,
+				help='Split number', required=None)
+	argparser.add_argument('--model_name', '-n', default=f'my_best_mem.pickle',
 				help='Best model memory to be saved file name', required=False)
 	argparser.add_argument('--pre_train', '-p', default=None,
 				help='Pretrained model import name (saved in outpath)', required=False)
+	
 	args = argparser.parse_args()
 
 	my_clip_train(args.in_path, args.out_path, args.model_name,

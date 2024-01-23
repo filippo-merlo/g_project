@@ -110,21 +110,21 @@ for v in dic_train_logical.values():
 
 # count n of concepts
 
-#c_count = 0
-#for k in types_logical_with_learning[0:3]:
-#	for c in dic_train_logical[k]:
-#		c_count += 1
-#print("Total number of concepts: ", c_count)
-#c_count = 0
-#for k in types_logical_with_learning[3:7]:
-#	for c in dic_train_logical[k]:
-#		c_count += 1
-#print("Total number of concepts: ", c_count)
-#c_count = 0
-#for k in types_logical_with_learning[-3:]:
-#	for c in dic_train_logical[k]:
-#		c_count += 1
-#print("Total number of concepts: ", c_count)
+c_count = 0
+for k in types_logical_with_learning[0:3]:
+	for c in dic_train_logical[k]:
+		c_count += 1
+print("Total number of concepts: ", c_count)
+c_count = 0
+for k in types_logical_with_learning[3:7]:
+	for c in dic_train_logical[k]:
+		c_count += 1
+print("Total number of concepts: ", c_count)
+c_count = 0
+for k in types_logical_with_learning[7:]:
+	for c in dic_train_logical[k]:
+		c_count += 1
+print("Total number of concepts: ", c_count)
 
 types_logical_with_learning_1 = types_logical_with_learning[:3]
 types_logical_with_learning_2 = types_logical_with_learning[3:7]
@@ -163,7 +163,3 @@ batch_size = 33
 # model architecture
 hidden_dim_clip = 128
 latent_dim = 16
-
-# %%
-
-# %%

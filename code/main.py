@@ -90,8 +90,7 @@ def my_clip_train(in_path, out_path, n_split, model_name, source, in_base,
 		infile.close()
 
 	t_tot = 0
-
-
+	
 	if n_split == '0':
 		learning_list = types_logical_with_learning
 	elif n_split == '1':
@@ -129,12 +128,14 @@ if __name__ == "__main__":
 	argparser.add_argument('--pre_train', '-p', default=None,
 				help='Pretrained model import name (saved in outpath)', required=False)
 	
+	argparser.add_argument('--gpu_idx', '-g', default=0,
+				help='Select gpu index', required=False)
+	
 	args = argparser.parse_args()
-	device = "cuda" if torch.cuda.is_available() else "cpu"
-	if args.n_split != '0':
-		gpu_index = int(args.n_split)-1
-		torch.cuda.set_device(gpu_index)
-		print('gpu:',gpu_index)
+	device = "cuda" if torch.cuda.is_available() else "cpu"	
+	gpu_index = int(args.gpu_idx)
+	torch.cuda.set_device(gpu_index)
+	print('gpu:',gpu_index)
 		
 	my_clip_train(args.in_path, args.out_path, args.n_split, args.model_name,
 				'train/', bn_train, ['rgba'], dic_train_logical, all_vocabs, args.pre_train)

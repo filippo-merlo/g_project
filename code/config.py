@@ -1,4 +1,3 @@
-#%%
 '''
 Learning Attributes:
 	- Color (6)

@@ -41,3 +41,23 @@ class CLIP_AE_Encode(nn.Module):
 		z = self.fc2(out)
 
 		return z
+
+class Decoder(nn.Module):
+	def __init__(self, latent_dim):
+		super(Decoder, self).__init__()
+		# Build decoder
+		self.fc1 = nn.Linear(latent_dim, 64)
+		self.dropout1 = nn.Dropout(0.2)  # Dropout layer with a dropout rate of 0.2
+		self.fc2 = nn.Linear(64, 64)
+		self.dropout2 = nn.Dropout(0.2)
+		self.fc3 = nn.Linear(64, 96)
+		self.dropout3 = nn.Dropout(0.2)
+		self.fc4 = nn.Linear(96, 512)
+		self.relu = nn.ReLU(inplace=True)
+
+	def forward(self, z):
+		out = self.dropout1(self.relu(self.fc1(z)))
+		out = self.dropout2(self.relu(self.fc2(out)))
+		out = self.dropout3(self.relu(self.fc3(out)))
+		out = self.fc4(out)
+		return out

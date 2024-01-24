@@ -20,6 +20,7 @@ class MyDataset():
 		self.totensor = TT.ToTensor()
 		self.resize = TT.Resize((resize, resize))
 		self.clip_preprocessor = clip_preprocessor
+		self.dic_without_logical = {k:v for k,v in self.dic.items() if ' ' not in k}
 
 		# convert vocab list to dic
 		self.vocab = vocab
@@ -104,8 +105,6 @@ class MyDataset():
 		images_sim = []
 		images_dif = []
 
-		dic_without_logical = {k:v for k,v in self.dic.items() if ' ' not in k}
-
 		def get_random_attribute(attribute_list, exclude=None):
 			attr = random.choice(attribute_list)
 			while attr == exclude:
@@ -130,7 +129,7 @@ class MyDataset():
 				names_dic_sim = {}
 				names_dic_dif = {}
 
-				for k, v in dic_without_logical.items(): # iterate on 'attribute_type':[list of attributes]
+				for k, v in self.dic_without_logical.items(): # iterate on 'attribute_type':[list of attributes]
 					if k == attribute: # if the attribute is the one we want to teach e.g. color
 						names_dic_sim[k] = lesson # we take the lesson e.g. red
 						names_dic_dif[k] = get_random_attribute(v,lesson)
@@ -156,7 +155,7 @@ class MyDataset():
 				names_dic_dif = {}
 				if 'and' in attribute.split():
 					for negative_case in range(3): # 0,1,2 [negatives]
-						for k, v in dic_without_logical.items(): # iterate on 'attribute_type':[list of attributes]
+						for k, v in self.dic_without_logical.items(): # iterate on 'attribute_type':[list of attributes]
 							if k == attribute1:
 								names_dic_sim[k] = lesson[0]
 								if negative_case == 0:
@@ -188,7 +187,7 @@ class MyDataset():
 				elif 'or' in attribute.split():
 					if attribute1 == attribute2:
 						for negative_case in range(2): # 0,1 [negatives]
-							for k, v in dic_without_logical.items(): # iterate on 'attribute_type':[list of attributes]
+							for k, v in self.dic_without_logical.items(): # iterate on 'attribute_type':[list of attributes]
 								if k == attribute1:
 									tp = get_random_attribute(v)
 									while (tp == lesson[0] or tp == lesson[1]):
@@ -216,7 +215,7 @@ class MyDataset():
 								images_dif.append(image)
 					else:
 						for negative_case in range(3): # 0,1,2 [negatives]
-							for k, v in dic_without_logical.items(): # iterate on 'attribute_type':[list of attributes]
+							for k, v in self.dic_without_logical.items(): # iterate on 'attribute_type':[list of attributes]
 								if k == attribute1:
 									names_dic_dif[k] = get_random_attribute(v, lesson[0])
 									
@@ -249,7 +248,7 @@ class MyDataset():
 								images_dif.append(image)
 
 				elif 'not' in attribute.split():
-					for k, v in dic_without_logical.items(): # iterate on 'attribute_type':[list of attributes]
+					for k, v in self.dic_without_logical.items(): # iterate on 'attribute_type':[list of attributes]
 						if k == attribute1: # if the attribute is the one we want to teach e.g. color
 							names_dic_dif[k] = lesson # we take the lesson e.g. red
 							names_dic_sim[k] = get_random_attribute(v,lesson)

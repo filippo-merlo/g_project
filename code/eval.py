@@ -159,7 +159,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
             for bi in range(len(indices_lb)):
                 continue
                 print('******')
-                print(all_vocabs[indices_lb[bi][0]],all_vocabs[indices_lb[bi][1]],all_vocabs[indices_lb[bi][2]])
+                print(vocabs[indices_lb[bi][0]],vocabs[indices_lb[bi][1]],vocabs[indices_lb[bi][2]])
                 for i in indices[bi]:
                     print(all_vocabs[i])
                 

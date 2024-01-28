@@ -156,10 +156,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
             print(tot_num)
             for bi in range(len(indices)):
 
-                print(lesson_retrieved = all_vocabs[indices[bi][0]],
-                    all_vocabs[indices_lb[bi][0]],
-                    all_vocabs[indices_lb[bi][1]],
-                    all_vocabs[indices_lb[bi][2]])
+                print(lesson_retrieved = all_vocabs[indices[bi][0]],all_vocabs[indices_lb[bi][0]],all_vocabs[indices_lb[bi][1]],all_vocabs[indices_lb[bi][2]])
 
 
                 #print(lesson_retrieved)

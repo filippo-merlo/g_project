@@ -56,7 +56,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
         tot_num_not = 0
 
         tot_num = 0
-        tot_num_logic
+        tot_num_logic = 0
 
         for base_is, images in data_loader:
             # Prepare the inputs

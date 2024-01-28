@@ -146,7 +146,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                     ans_logical.append(disi.detach().to('cpu'))
             # get top3 incicies
             ans_logical = torch.stack(ans_logical, dim=1)
-            values, indices = ans_logical.topk(1, largest=False)
+            values, indices = ans_logical.topk(10, largest=False)
 
             _, indices_lb = base_is.topk(3)
             indices_lb, _ = torch.sort(indices_lb)
@@ -155,8 +155,10 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
             tot_num += len(indices)
             print(tot_num)
             for bi in range(len(indices)):
-
-                print(all_vocabs[indices[bi][0]],all_vocabs[indices_lb[bi][0]],all_vocabs[indices_lb[bi][1]],all_vocabs[indices_lb[bi][2]])
+                print(all_vocabs[indices_lb[bi][0]],all_vocabs[indices_lb[bi][1]],all_vocabs[indices_lb[bi][2]])
+                for i in indices[bi]
+                    print(all_vocabs[i])
+                
 
 
                 #print(lesson_retrieved)

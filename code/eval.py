@@ -153,31 +153,37 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
 
             # calculate stats
             tot_num += len(indices)
+            print(tot_num)
             for bi in range(len(indices)):
-                rel = rel_list[bi][0]
-                lesson_retrieved = all_vocabs[indices[bi][0]]
-                print(lesson_retrieved)
-                if rel == 'not':
-                    attr = rel[1]
-                    if attr not in indices[bi]:
-                        top3_not += 1
-                        tot_num_not += 1
-                elif rel == 'and':
-                    attr1 = rel[1]
-                    attr2 = rel[2]
-                    if attr1 in indices[bi] and attr2 in indices[bi]:
-                        top3_and += 1
-                        tot_num_and += 1
-                elif rel == 'or':
-                    attr1 = rel[1]
-                    attr2 = rel[2]
-                    if attr1 in indices[bi] or attr2 in indices[bi]:
-                        top3_or += 1
-                        tot_num_or += 1
 
-            tot_logical = tot_num_not + tot_num_and + tot_num_or
-            print('Logical, tot, not, and , or')
-            print(tot_logical / tot_num, top3_not / tot_num_not, top3_and / tot_num_and, top3_or / tot_num_or)
+                print(lesson_retrieved = all_vocabs[indices[bi][0]],
+                    all_vocabs[indices_lb[bi][0]],
+                    all_vocabs[indices_lb[bi][1]],
+                    all_vocabs[indices_lb[bi][2]])
+
+
+                #print(lesson_retrieved)
+                #if rel == 'not':
+                #    attr = rel[1]
+                #    if attr not in indices[bi]:
+                #        top3_not += 1
+                #        tot_num_not += 1
+                #elif rel == 'and':
+                #    attr1 = rel[1]
+                #    attr2 = rel[2]
+                #    if attr1 in indices[bi] and attr2 in indices[bi]:
+                #        top3_and += 1
+                #        tot_num_and += 1
+                #elif rel == 'or':
+                #    attr1 = rel[1]
+                #    attr2 = rel[2]
+                #    if attr1 in indices[bi] or attr2 in indices[bi]:
+                #        top3_or += 1
+                #        tot_num_or += 1
+
+            #tot_logical = tot_num_not + tot_num_and + tot_num_or
+            #print('Logical, tot, not, and , or')
+            #print(tot_logical / tot_num, top3_not / tot_num_not, top3_and / tot_num_and, top3_or / tot_num_or)
 
     return top3 / tot_num
 

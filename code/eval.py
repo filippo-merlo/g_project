@@ -187,7 +187,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
 source = 'novel_test/'
 in_base = bsn_novel_test_1
 types = ['rgba']
-dic = dic_train_logical
+dic = dic_test_logical
 vocab = all_vocabs
 
 #in_path = '/Users/filippomerlo/Desktop/Datasets/SOLA'

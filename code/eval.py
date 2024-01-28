@@ -154,7 +154,8 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
 
             # calculate stats
             tot_num_logic += len(indices)
-            for bi in range(len(indices)):
+            for bi in range(len(indices_lb)):
+
                 print('******')
                 print(all_vocabs[indices_lb[bi][0]],all_vocabs[indices_lb[bi][1]],all_vocabs[indices_lb[bi][2]])
                 for i in indices[bi]:
@@ -218,3 +219,18 @@ if __name__ == "__main__":
 
     t = my_clip_evaluation(args.in_path, source, memory_complete, in_base, types, dic, vocab)
 
+#%%
+import pickle
+mp = '/Users/filippomerlo/Desktop/memories/my_best_mem_1.pickle'
+with open(mp, 'rb') as f:
+    memory_complete = pickle.load(f)
+for i in range(2, 8):
+    pieces = mp.split('my_best_mem_')
+    new_path = pieces[0] + f'my_best_mem_{i}.pickle'
+    with open(new_path, 'rb') as f:
+        memory = pickle.load(f)
+    for k in memory.keys():
+        memory_complete[k] = memory[k]
+save_mp = '/Users/filippomerlo/Desktop/memories/my_best_mem_complete.pickle'
+with open(save_mp, 'wb') as file:
+    pickle.dump(memory_complete, file)

@@ -207,7 +207,7 @@ if __name__ == "__main__":
 
     with open(args.memory_path, 'rb') as f:
             memory_complete = pickle.load(f)
-    for i in range(2, 7):
+    for i in range(2, 8):
         pieces = args.memory_path.split('my_best_mem_')
         new_path = pieces[0] + f'my_best_mem_{i}.pickle'
         with open(new_path, 'rb') as f:

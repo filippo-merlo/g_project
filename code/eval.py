@@ -115,7 +115,6 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
             rel_list = []
             ans_logical = []
             for i, label in enumerate(all_vocabs):
-                print(f'{i}/{len(all_vocabs)}')
                 if ' ' in label:
                     if label not in memory.keys():
                         ans_logical.append(torch.full((batch_size_i, 1), 1000.0).squeeze(1))

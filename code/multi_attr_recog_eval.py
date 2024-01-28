@@ -125,43 +125,7 @@ def my_clip_evaluation(in_path, source, memory_path, in_base, types, dic, vocab_
 		print('color',top3_color,'\nmaterial',top3_material,'\nshape',top3_shape,'\nclassic',top3)
 		print('and',top3_and/tot_and,'\nor',top3_or/tot_or,'\nnot',top3_not/tot_not,'\nlogic',top3_logic)
 			#####
-'''	
-		# get top3 indices
-		ans = torch.stack(ans, dim=1)
-		values, indices = ans.topk(3, largest=False)
-		_, indices_lb = base_is.topk(3)
-		indices_lb, _ = torch.sort(indices_lb)
 
-		# calculate stats
-		tot_num += len(indices)
-
-		for bi in range(len(indices)):
-			ci = 0
-			mi = 0
-			si = 0
-			print('***',indices[bi],'***')
-			if indices_lb[bi][0] in indices[bi]:
-				print(indices_lb[bi][0])
-				ci = 1
-			if indices_lb[bi][1] in indices[bi]:
-				print(indices_lb[bi][1])
-				mi = 1
-			if indices_lb[bi][2] in indices[bi]:
-				print(indices_lb[bi][2])
-				si = 1
-
-			top3_color += ci
-			top3_material += mi
-			top3_shape += si
-
-			if (ci == 1) and (mi == 1) and (si == 1):
-				top3 += 1
-			
-		print(tot_num, top3_color/tot_num, top3_material/tot_num,
-				top3_shape/tot_num, top3/tot_num, 
-				top3_and/tot_num_logic, top3_or/tot_num_logic, top3_not/tot_num_logic)
-	return top3/tot_num, top3_and/tot_num_logic, top3_or/tot_num_logic, top3_not/tot_num_logic
-'''
 source = 'train'
 in_base = bn_train
 types = ['rgba']

@@ -1,3 +1,4 @@
+#%%
 '''
 Learning Attributes:
 	- Color (6)
@@ -90,6 +91,7 @@ types_logical_with_learning =  types_logical + types_learning
 
 from itertools import product
 from pprint import pprint
+
 dic_train_logical = dic_train.copy()
 for rel in types_logical:
 	if rel.split(' ')[0] == 'not':
@@ -100,6 +102,11 @@ for rel in types_logical:
 		r = rel.split(' ')[1]
 		attr2 = rel.split(' ')[2]
 		dic_train_logical[rel] = [f'{x} {r} {y}' for x, y in product(dic_train[attr1], dic_train[attr2]) if x != y]
+dic_test_logical["scale"] = dic_test["scale"]
+dic_test_logical["stretch"] = dic_test["stretch"]
+dic_test_logical["shade"] = dic_test["shade"]
+
+
 
 all_vocabs = []
 for v in dic_train_logical.values():

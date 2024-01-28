@@ -10,10 +10,10 @@ from models import *
 
 import pickle
 
-print(torch.backends.mps.is_available())  # the MacOS is higher than 12.3+
-print(torch.backends.mps.is_built())  # MPS is activated
-device = torch.device('mps')
-
+#print(torch.backends.mps.is_available())  # the MacOS is higher than 12.3+
+#print(torch.backends.mps.is_built())  # MPS is activated
+#device = torch.device('mps')
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
     with torch.no_grad():

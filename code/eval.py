@@ -20,9 +20,9 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
     with torch.no_grad():
         # get vocab dictionary
         if source == 'train':
-            dic = dic_train
+            dic = dic_test
         else:
-            dic = dic_train
+            dic = dic_test
 
         # get dataset
         clip_model, clip_preprocess = clip.load("ViT-B/32", device=device)
@@ -147,7 +147,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                     ans_logical.append(disi.detach().to('cpu'))
             # get top3 incicies
             ans_logical = torch.stack(ans_logical, dim=1)
-            values, indices = ans_logical.topk(3, largest=False)
+            values, indices = ans_logical.topk(20, largest=False)
 
             _, indices_lb = base_is.topk(3)
             indices_lb, _ = torch.sort(indices_lb)
@@ -191,13 +191,10 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
 #TESTING
 
 
-#source = 'novel_test/'
-source = 'train'
-#in_base = bsn_novel_test_1
-in_base = bn_train
+source = 'novel_test/'
+in_base = bsn_novel_test_1
 types = ['rgba']
-#dic = dic_test_logical
-dic = dic_train_logical
+dic = dic_test_logical
 vocab = all_vocabs
 
 #in_path = '/Users/filippomerlo/Desktop/Datasets/SOLA'

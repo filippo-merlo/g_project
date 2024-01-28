@@ -114,7 +114,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
 
             rel_list = []
             ans_logical = []
-            for i, label in enumerate(all_vocabs):
+            for label in all_vocabs:
                 if ' ' in label:
                     if label not in memory.keys():
                         ans_logical.append(torch.full((batch_size_i, 1), 1000.0).squeeze(1))
@@ -124,13 +124,13 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                         rel = s[0]
                         attr1 = s[1]
                         attr2 = None
-                        rel_list.append([rel, vocabs.index(attr1)])
+                        rel_list.append([rel, int(vocabs.index(attr1))])
                         print(vocabs.index(attr1))
                     else:
                         rel = s[1]
                         attr1 = s[0]
                         attr2 = s[2]
-                        rel_list.append([rel, vocabs.index(attr1), vocabs.index(attr2)])
+                        rel_list.append([rel, int(vocabs.index(attr1)), int(vocabs.index(attr2))])
                         print(vocabs.index(attr1), vocabs.index(attr2))
                     # load model
                     model = CLIP_AE_Encode(hidden_dim_clip, latent_dim, isAE=False)
@@ -148,7 +148,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                     ans_logical.append(disi.detach().to('cpu'))
             # get top3 incicies
             ans_logical = torch.stack(ans_logical, dim=1)
-            values, indices = ans_logical.topk(3, largest=False)
+            values, indices = ans_logical.topk(10, largest=False)
             print(indices)
 
             _, indices_lb = base_is.topk(3)

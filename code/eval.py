@@ -210,5 +210,5 @@ if __name__ == "__main__":
         for k in memory.keys():
             memory_complete[k] = memory[k]
 
-    t = my_clip_evaluation(in_path, source, memory_complete, in_base, types, dic, vocab)
+    t = my_clip_evaluation(args.in_path, source, memory_complete, in_base, types, dic, vocab)
 

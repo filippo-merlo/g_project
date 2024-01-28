@@ -125,13 +125,11 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                         attr1 = s[1]
                         attr2 = None
                         rel_list.append([rel, int(vocabs.index(attr1))])
-                        print(vocabs.index(attr1))
                     else:
                         rel = s[1]
                         attr1 = s[0]
                         attr2 = s[2]
                         rel_list.append([rel, int(vocabs.index(attr1)), int(vocabs.index(attr2))])
-                        print(vocabs.index(attr1), vocabs.index(attr2))
                     # load model
                     model = CLIP_AE_Encode(hidden_dim_clip, latent_dim, isAE=False)
                     model.load_state_dict(memory[label]['model'])
@@ -159,6 +157,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
             tot_num += len(indices)
             for bi in range(len(indices)):
                 rel = rel_list[bi][0]
+                print(indices[bi])
 
                 if rel == 'not':
                     attr = rel[1]

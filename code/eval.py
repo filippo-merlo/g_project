@@ -219,9 +219,6 @@ types = ['rgba']
 dic = dic_test_logical
 vocab = all_vocabs
 
-#in_path = '/Users/filippomerlo/Desktop/Datasets/SOLA'
-#memory_path = '/Users/filippomerlo/Desktop/memories/my_best_mem_1.pickle'
-
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     argparser.add_argument('--in_path', type=str, required=True)
@@ -238,4 +235,4 @@ if __name__ == "__main__":
         for k in memory.keys():
             memory_complete[k] = memory[k]
 
-    t = my_clip_evaluation_logical(args.in_path, source, memory_complete, in_base, types, dic, vocab)
+    t = my_clip_evaluation_base(args.in_path, source, memory_complete, in_base, types, dic, vocab)

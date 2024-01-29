@@ -27,7 +27,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
         # get dataset
         clip_model, clip_preprocess = clip.load("ViT-B/32", device=device)
         dt = MyDataset(in_path, source, in_base, types, dic, vocab, clip_preprocessor=clip_preprocess)
-        data_loader = DataLoader(dt, batch_size=10, shuffle=True)
+        data_loader = DataLoader(dt, batch_size=100, shuffle=True)
 
         top3 = 0
         top3_color = 0
@@ -111,7 +111,8 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                 if (ci == 1) and (mi == 1) and (si == 1):
                     top3 += 1
 
-            print(tot_num, top3_color / tot_num, top3_material / tot_num, top3_shape / tot_num, top3 / tot_num)
+            print('BASIC: ','Tot:',tot_num, 
+            '/n Color:'top3_color / tot_num, 'Material:'top3_material / tot_num, 'Shape:'top3_shape / tot_num, top3 / tot_num)
 
             rel_list = []
             ans_logical = []
@@ -182,8 +183,8 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
     
             tot_logical = tot_num_not + tot_num_and + tot_num_or
             tot_score_logical = top3_not + top3_and + top3_or
-            print('Logical, tot, not, and , or')
-            print(tot_score_logical / tot_logical, top3_not / tot_num_not, top3_and / tot_num_and, top3_or / tot_num_or)
+            print('LOGICAL: ','Tot:',tot_score_logical / tot_logical, 
+            '/nTot:',top3_not / tot_num_not, 'And:',top3_and / tot_num_and, 'Or:',top3_or / tot_num_or)
 
     return top3 / tot_num
 

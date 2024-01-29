@@ -116,6 +116,31 @@ for v in dic_train_logical.values():
 	for n in v:
 		if n not in others and n not in vocabs:
 			logical_vocabs.append(n)
+
+#o = 'red plastic cone'
+#_or = 0
+#_and = 0
+#_not = 0
+#for n in logical_vocabs:
+#	if 'and' in n.split():
+#		attr1 = n.split()[0]
+#		attr2 = n.split()[2]
+#		if attr1 in o.split() and attr2 in o.split():
+#			_and += 1
+#	elif 'or' in n.split():
+#		attr1 = n.split()[0]
+#		attr2 = n.split()[2]
+#		if attr1 in o.split() or attr2 in o.split():
+#			_or += 1
+#	elif 'not' in n.split():
+#		attr1 = n.split()[1]
+#		if attr1 not in o.split():
+#			_not += 1
+
+
+
+print(_not,_and,_or)
+
 all_vocabs = vocabs + logical_vocabs
 
 

@@ -137,7 +137,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
             
             # get top3 incicies
             ans_logical = torch.stack(ans_logical, dim=1)
-            values, indices = ans_logical.topk(20, largest=False)
+            values, indices = ans_logical.topk(106, largest=False)
 
             _, indices_lb = base_is.topk(3)
             indices_lb, _ = torch.sort(indices_lb)

@@ -112,7 +112,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                     top3 += 1
 
             print('BASIC: ','Tot:',tot_num, 
-            '/n Color:'top3_color / tot_num, 'Material:'top3_material / tot_num, 'Shape:'top3_shape / tot_num, top3 / tot_num)
+            '/n Color:',top3_color / tot_num, 'Material:',top3_material / tot_num, 'Shape:',top3_shape / tot_num, top3 / tot_num)
 
             rel_list = []
             ans_logical = []

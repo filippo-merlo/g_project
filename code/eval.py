@@ -18,7 +18,7 @@ from pprint import pprint
 #device = torch.device('mps')
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
+def my_clip_evaluation_base(in_path, source, memory, in_base, types, dic, vocab):
     with torch.no_grad():
         # get vocab dictionary
         if source == 'train':
@@ -35,19 +35,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
         top3_color = 0
         top3_material = 0
         top3_shape = 0
-
-        score_and = 0
-        tot_num_and = 0
-        errors_and = dict()
-
-        score_or = 0
-        tot_num_or = 0
-
-        score_not = 0
-        tot_num_not = 0
-
         tot_num = 0
-        tot_num_logical = 0
 
         for base_is, images in data_loader:
             # Prepare the inputs
@@ -104,6 +92,38 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
 
             print('BASIC: ','Num:',tot_num, 
             'Color:',top3_color / tot_num, 'Material:',top3_material / tot_num, 'Shape:',top3_shape / tot_num, 'Tot:',top3 / tot_num)
+
+    return top3 / tot_num
+
+def my_clip_evaluation_logical(in_path, source, memory, in_base, types, dic, vocab):
+    with torch.no_grad():
+        # get vocab dictionary
+        if source == 'train':
+            dic = dic_test
+        else:
+            dic = dic_train
+
+        # get dataset
+        clip_model, clip_preprocess = clip.load("ViT-B/32", device=device)
+        dt = MyDataset(in_path, source, in_base, types, dic, vocab, clip_preprocessor=clip_preprocess)
+        data_loader = DataLoader(dt, batch_size=129, shuffle=True)
+
+        score_and = 0
+        tot_num_and = 0
+        errors_and = dict()
+
+        score_or = 0
+        tot_num_or = 0
+
+        score_not = 0
+        tot_num_not = 0
+
+        tot_num_logical = 0
+
+        for base_is, images in data_loader:
+            # Prepare the inputs
+            images = images.to(device)
+            batch_size_i = len(base_is)
 
             rel_list = []
             ans_logical = []
@@ -188,7 +208,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
             print('AND errors:')
             pprint(errors_and)
 
-    return [top3 / tot_num, tot_score_logical/tot_num_logical]
+    return tot_score_logical/tot_num_logical
 
 
 #TESTING
@@ -218,4 +238,4 @@ if __name__ == "__main__":
         for k in memory.keys():
             memory_complete[k] = memory[k]
 
-    t = my_clip_evaluation(args.in_path, source, memory_complete, in_base, types, dic, vocab)
+    t = my_clip_evaluation_logical(args.in_path, source, memory_complete, in_base, types, dic, vocab)

@@ -22,7 +22,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
         if source == 'train':
             dic = dic_test
         else:
-            dic = dic_test
+            dic = dic_train
 
         # get dataset
         clip_model, clip_preprocess = clip.load("ViT-B/32", device=device)
@@ -47,14 +47,14 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
         tot_num_not = 0
 
         tot_num = 0
-        tot_num_logic = 0
+        tot_num_logical = 0
 
         for base_is, images in data_loader:
             # Prepare the inputs
             images = images.to(device)
-            ans = []
             batch_size_i = len(base_is)
-
+        
+            ans = []
             # go through memory
             for label in vocabs:
                 if label not in memory.keys():
@@ -128,13 +128,12 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
             
             # get top3 incicies
             ans_logical = torch.stack(ans_logical, dim=1)
-            values, indices = ans_logical.topk(106, largest=False)
+            values, indices = ans_logical.topk(106, largest=False) # 106 is the number of logical relations true for each image
 
             _, indices_lb = base_is.topk(3)
             indices_lb, _ = torch.sort(indices_lb)
 
             # calculate stats
-            tot_num_logic += len(indices)
             for bi in range(len(indices_lb)):
                 # object
                 color = vocabs[indices_lb[bi][0]]
@@ -144,6 +143,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
 
                 # check logical rep retrieved
                 for i in indices[bi]:
+                    tot_num_logical += 1
                     # check validity
                     prop = logical_vocabs[i].split(' ')
 
@@ -176,18 +176,16 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                             score_or += 1
                         else:
                             err_or += 1
-                        
-            tot_logical = tot_num_not + tot_num_and + tot_num_or
+
             tot_score_logical = score_not + score_and + score_or
-            print('LOGICAL: ','Tot:',tot_score_logical / tot_logical, 
+            print('LOGICAL: ','Tot:',tot_score_logical / tot_num_logical, 
             'Not:',score_not / tot_num_not, 'And:',score_and / tot_num_and, 'Or:',score_or / tot_num_or,'\n',
             'Errors: ','Not:',err_not / tot_num_not, 'And:',err_and / tot_num_and, 'Or:',err_or / tot_num_or)
 
-    return top3 / tot_num
+    return [top3 / tot_num, tot_score_logical/tot_num_logical]
 
 
 #TESTING
-
 
 source = 'novel_test/'
 in_base = bsn_novel_test_1

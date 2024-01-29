@@ -107,10 +107,10 @@ def train_decoder(in_path, out_path, model_name, memory_path,
                             # reconstruct
                             p2p = rec_img * (1 - filter_i_rec) + output
 
-                            q2p_loss = 1 - get_cos_sim(edit1_img.float(), q2p.float())
+                            q2p_loss = get_mse_loss(edit1_img.float(), q2p.float())
                             q2p_loss = q2p_loss.to(device)
 
-                            p2p_loss = 1 - get_cos_sim(rec_img.float(), p2p.float())
+                            p2p_loss = get_mse_loss(rec_img.float(), p2p.float())
                             p2p_loss = p2p_loss.to(device)
 
                             loss = q2p_loss + p2p_loss
@@ -162,10 +162,10 @@ def train_decoder(in_path, out_path, model_name, memory_path,
                             # reconstruct
                             p2p = rec_img * (1 - filter_i_rec) + output
 
-                            q2p_loss = 1 - get_cos_sim(edit1_img.float(), q2p.float())
+                            q2p_loss = get_mse_loss(edit1_img.float(), q2p.float())
                             q2p_loss = q2p_loss.to(device)
 
-                            p2p_loss = 1 - get_cos_sim(rec_img.float(), p2p.float())
+                            p2p_loss = get_mse_loss(rec_img.float(), p2p.float())
                             p2p_loss = p2p_loss.to(device)
 
                             loss = q2p_loss + p2p_loss
@@ -272,19 +272,19 @@ def train_decoder(in_path, out_path, model_name, memory_path,
                             # 011 green_metal_cone - red or cone + out => green_metal_cone 
 
             
-                            q2p_loss_1 = 1 - get_cos_sim(edit1_img_1.float(), q2p_1.float())
+                            q2p_loss_1 = get_mse_loss(edit1_img_1.float(), q2p_1.float())
                             q2p_loss_1 = q2p_loss_1.to(device)
-                            q2p_loss_2 = 1 - get_cos_sim(edit1_img_2.float(), q2p_2.float())
+                            q2p_loss_2 = get_mse_loss(edit1_img_2.float(), q2p_2.float())
                             q2p_loss_2 = q2p_loss_2.to(device)
-                            q2p_loss_3 = 1 - get_cos_sim(edit1_img_3.float(), q2p_3.float())
+                            q2p_loss_3 = get_mse_loss(edit1_img_3.float(), q2p_3.float())
                             q2p_loss_3 = q2p_loss_3.to(device)
 
 
-                            p2p_loss_1 = 1 - get_cos_sim(rec_img_1.float(), p2p_1.float())
+                            p2p_loss_1 = get_mse_loss(rec_img_1.float(), p2p_1.float())
                             p2p_loss_1 = p2p_loss_1.to(device)
-                            p2p_loss_2 = 1 - get_cos_sim(rec_img_2.float(), p2p_2.float())
+                            p2p_loss_2 = get_mse_loss(rec_img_2.float(), p2p_2.float())
                             p2p_loss_2 = p2p_loss_2.to(device)
-                            p2p_loss_3 = 1 - get_cos_sim(rec_img_3.float(), p2p_3.float())
+                            p2p_loss_3 = get_mse_loss(rec_img_3.float(), p2p_3.float())
                             p2p_loss_3 = p2p_loss_3.to(device)
 
                             loss = q2p_loss_1 + q2p_loss_2 + q2p_loss_3 + p2p_loss_1 + p2p_loss_2 + p2p_loss_3
@@ -325,15 +325,15 @@ def train_decoder(in_path, out_path, model_name, memory_path,
                             output = dec.forward(centroid_i)
 
                             # edit
-                            q2p = edit2_img * (1 - filter_i_edit) + output # red - red + not red ---> min: sim(red and out)
+                            q2p = edit2_img * (1 - filter_i_edit) + output # red - red + not red ---> max: sim(non red and out)
 
                             # reconstruct
-                            p2p = rec1_img * (1 - filter_i_rec) + output # not red - not red + not red ---> min: sim(red and out))
+                            p2p = rec1_img * (1 - filter_i_rec) + output # not red - not red + not red ---> max: sim(not red and out))
 
-                            q2p_loss = get_cos_sim(edit2_img.float(), q2p.float())
+                            q2p_loss = get_mse_loss(edit1_img.float(), q2p.float())
                             q2p_loss = q2p_loss.to(device)
 
-                            p2p_loss = get_cos_sim(rec2_img.float(), p2p.float())
+                            p2p_loss = get_mse_loss(rec1_img.float(), p2p.float())
                             p2p_loss = p2p_loss.to(device)
 
                             loss = q2p_loss + p2p_loss

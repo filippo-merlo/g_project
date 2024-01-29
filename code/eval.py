@@ -34,25 +34,16 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
         top3_material = 0
         top3_shape = 0
 
-        top3_and = 0
-        top3_color_and_material = 0
-        top3_color_and_shape = 0
-        top3_material_and_shape = 0
+        score_and = 0
+        err_and = 0
         tot_num_and = 0
 
-        top3_or = 0
-        top3_color_or_material = 0
-        top3_color_or_shape = 0
-        top3_material_or_shape = 0
-        top3_color_or_color = 0
-        top3_material_or_material = 0
-        top3_shape_or_shape = 0
+        score_or = 0
+        err_or = 0
         tot_num_or = 0
 
-        top3_not = 0
-        top3_not_color = 0
-        top3_not_material = 0
-        top3_not_shape = 0
+        score_not = 0
+        err_not = 0
         tot_num_not = 0
 
         tot_num = 0
@@ -162,7 +153,9 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                         tot_num_not += 1   
 
                         if attr1 not in atrs:
-                            top3_not += 1
+                            score_not += 1
+                        else: 
+                            err_not += 1
 
                     elif 'and' in prop:
                         attr1 = prop[0]
@@ -170,7 +163,9 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                         tot_num_and += 1
 
                         if attr1 in atrs and attr2 in atrs:
-                            top3_and += 1
+                            score_and += 1
+                        else:
+                            err_and += 1
 
                     elif 'or' in prop:
                         attr1 = prop[0]
@@ -178,13 +173,15 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                         tot_num_or += 1
 
                         if attr1 in atrs or attr2 in atrs:
-                            top3_or += 1
-                            
-    
+                            score_or += 1
+                        else:
+                            err_or += 1
+                        
             tot_logical = tot_num_not + tot_num_and + tot_num_or
             tot_score_logical = top3_not + top3_and + top3_or
             print('LOGICAL: ','Tot:',tot_score_logical / tot_logical, 
-            'Not:',top3_not / tot_num_not, 'And:',top3_and / tot_num_and, 'Or:',top3_or / tot_num_or)
+            'Not:',score_not / tot_num_not, 'And:',score_and / tot_num_and, 'Or:',score_or / tot_num_or,'\n')
+            'Errors: ','Not:',err_not / tot_num_not, 'And:',err_and / tot_num_and, 'Or:',err_or / tot_num_or)
 
     return top3 / tot_num
 

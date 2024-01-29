@@ -27,7 +27,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
         # get dataset
         clip_model, clip_preprocess = clip.load("ViT-B/32", device=device)
         dt = MyDataset(in_path, source, in_base, types, dic, vocab, clip_preprocessor=clip_preprocess)
-        data_loader = DataLoader(dt, batch_size=100, shuffle=True)
+        data_loader = DataLoader(dt, batch_size=129, shuffle=True)
 
         top3 = 0
         top3_color = 0

@@ -111,10 +111,13 @@ dic_test_logical["shade"] = dic_test["shade"]
 
 
 all_vocabs = []
+logical_vocabs = []
 for v in dic_train_logical.values():
 	for n in v:
-		if n not in others:
-			all_vocabs.append(n)
+		if n not in others and n not in vocabs:
+			logical_vocabs.append(n)
+all_vocabs = vocabs + logical_vocabs
+
 
 # count n of concepts
 

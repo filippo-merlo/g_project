@@ -115,39 +115,41 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
 
             rel_list = []
             ans_logical = []
-            for label in all_vocabs:
-                if ' ' in label:
-                    if label not in memory.keys():
-                        ans_logical.append(torch.full((batch_size_i, 1), 1000.0).squeeze(1))
-                        continue
-                    s = label.split(' ')
-                    if 'not' in s:
-                        rel = s[0]
-                        attr1 = s[1]
-                        attr2 = None
-                        rel_list.append([rel, int(vocabs.index(attr1))])
-                    else:
-                        rel = s[1]
-                        attr1 = s[0]
-                        attr2 = s[2]
-                        rel_list.append([rel, int(vocabs.index(attr1)), int(vocabs.index(attr2))])
-                    # load model
-                    model = CLIP_AE_Encode(hidden_dim_clip, latent_dim, isAE=False)
-                    model.load_state_dict(memory[label]['model'])
-                    model.to(device)
-                    model.eval()
+            for label in logical_vocabs:
+                if label not in memory.keys():
+                    ans_logical.append(torch.full((batch_size_i, 1), 1000.0).squeeze(1))
+                    continue
+               
+                s = label.split(' ')
+                if 'not' in s:
+                    rel = s[0]
+                    attr1 = s[1]
+                    attr2 = None
+                    rel_list.append([rel, int(vocabs.index(attr1))])
+                else:
+                    rel = s[1]
+                    attr1 = s[0]
+                    attr2 = s[2]
+                    rel_list.append([rel, int(vocabs.index(attr1)), int(vocabs.index(attr2))])
+                
+                # load model
+                model = CLIP_AE_Encode(hidden_dim_clip, latent_dim, isAE=False)
+                model.load_state_dict(memory[label]['model'])
+                model.to(device)
+                model.eval()
 
-                    # load centroid
-                    centroid_i = memory[label]['centroid'].to(device)
-                    centroid_i = centroid_i.repeat(batch_size_i, 1)
+                # load centroid
+                centroid_i = memory[label]['centroid'].to(device)
+                centroid_i = centroid_i.repeat(batch_size_i, 1)
 
-                    # compute stats
-                    z = model(clip_model, images).squeeze(0)
-                    disi = ((z - centroid_i) ** 2).mean(dim=1)
-                    ans_logical.append(disi.detach().to('cpu'))
+                # compute stats
+                z = model(clip_model, images).squeeze(0)
+                disi = ((z - centroid_i) ** 2).mean(dim=1)
+                ans_logical.append(disi.detach().to('cpu'))
+            
             # get top3 incicies
             ans_logical = torch.stack(ans_logical, dim=1)
-            values, indices = ans_logical.topk(20, largest=False)
+            values, indices = ans_logical.topk(1, largest=False)
 
             _, indices_lb = base_is.topk(3)
             indices_lb, _ = torch.sort(indices_lb)
@@ -158,7 +160,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                 print('******')
                 print(vocabs[indices_lb[bi][0]],vocabs[indices_lb[bi][1]],vocabs[indices_lb[bi][2]])
                 for i in indices[bi]:
-                    print(all_vocabs[i])
+                    print(logical_vocabs[i])
                 
 
 

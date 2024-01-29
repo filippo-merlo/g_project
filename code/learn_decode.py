@@ -376,4 +376,4 @@ if __name__ == "__main__":
    
     train_decoder(args.in_path, args.out_path, args.model_name, args.memory_path, clip_model, preprocess,
                     'train/', bn_train, ['rgba'], dec_dic_train_logical, all_vocabs,  
-                    epochs=5, lr=0.001, batch_size=108, latent_dim=16)
+                    epochs=2, lr=0.001, batch_size=108, latent_dim=16)

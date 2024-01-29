@@ -99,7 +99,8 @@ class MyDataset():
 		images = torch.cat(images)
 		return images
 	
-	def get_paired_batches(self, attribute, lesson):
+	def get_paired_batches(self, attribute, lesson, batch_size = 132):
+		sim_batch = batch_size
 		base_names_sim = []
 		base_names_dif = []
 		images_sim = []

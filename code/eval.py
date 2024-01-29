@@ -149,7 +149,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
             
             # get top3 incicies
             ans_logical = torch.stack(ans_logical, dim=1)
-            values, indices = ans_logical.topk(1, largest=False)
+            values, indices = ans_logical.topk(5, largest=False)
 
             _, indices_lb = base_is.topk(3)
             indices_lb, _ = torch.sort(indices_lb)
@@ -162,8 +162,6 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                 for i in indices[bi]:
                     print(logical_vocabs[i])
                 
-
-
                 #print(lesson_retrieved)
                 #if rel == 'not':
                 #    attr = rel[1]

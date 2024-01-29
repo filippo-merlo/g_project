@@ -170,7 +170,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                             attr1 = get_attr(attr1)
                             attr2 = get_attr(attr2)
                             if attr1+'_and_'attr2 not in errors_and.keys():
-                                errors_and[attr1+'_and_'attr2] = 1
+                                errors_and[attr1+'_and_'+attr2] = 1
                             errors_and[attr1+'_and_'attr2] += 1
 
 

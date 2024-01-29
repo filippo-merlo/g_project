@@ -50,7 +50,7 @@ def train_decoder(in_path, out_path, model_name, memory_path,
     for attr in dec_types_logical_with_learning:
         print('learning' + ' ' + attr)
         for lesson in dic[attr]:
-            wandb.init(project='decode '+attr+' logical', name=lesson)  # Replace with your project name and run name
+            wandb.init(project='decode logical', name=attr+': '+lesson)  # Replace with your project name and run name
             print(lesson)
             # build decoder
             dec = Decoder(latent_dim).to(device)

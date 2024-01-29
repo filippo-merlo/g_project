@@ -35,15 +35,12 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
         top3_shape = 0
 
         score_and = 0
-        err_and = 0
         tot_num_and = 0
 
         score_or = 0
-        err_or = 0
         tot_num_or = 0
 
         score_not = 0
-        err_not = 0
         tot_num_not = 0
 
         tot_num = 0
@@ -154,8 +151,6 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
 
                         if attr1 not in atrs:
                             score_not += 1
-                        else: 
-                            err_not += 1
 
                     elif 'and' in prop:
                         attr1 = prop[0]
@@ -164,8 +159,6 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
 
                         if attr1 in atrs and attr2 in atrs:
                             score_and += 1
-                        else:
-                            err_and += 1
 
                     elif 'or' in prop:
                         attr1 = prop[0]
@@ -174,13 +167,10 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
 
                         if attr1 in atrs or attr2 in atrs:
                             score_or += 1
-                        else:
-                            err_or += 1
 
             tot_score_logical = score_not + score_and + score_or
             print('LOGICAL: ','Tot:',tot_score_logical / tot_num_logical, 
-            'Not:',score_not / tot_num_not, 'And:',score_and / tot_num_and, 'Or:',score_or / tot_num_or,'\n',
-            'Errors: ','Not:',err_not / tot_num_not, 'And:',err_and / tot_num_and, 'Or:',err_or / tot_num_or)
+            'Not:',score_not / tot_num_not, 'And:',score_and / tot_num_and, 'Or:',score_or / tot_num_or)
 
     return [top3 / tot_num, tot_score_logical/tot_num_logical]
 

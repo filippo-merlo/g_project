@@ -118,20 +118,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
             for label in logical_vocabs:
                 if label not in memory.keys():
                     ans_logical.append(torch.full((batch_size_i, 1), 1000.0).squeeze(1))
-                    continue
-               
-                s = label.split(' ')
-                if 'not' in s:
-                    rel = s[0]
-                    attr1 = s[1]
-                    attr2 = None
-                    rel_list.append([rel, int(vocabs.index(attr1))])
-                else:
-                    rel = s[1]
-                    attr1 = s[0]
-                    attr2 = s[2]
-                    rel_list.append([rel, int(vocabs.index(attr1)), int(vocabs.index(attr2))])
-                
+                    continue 
                 # load model
                 model = CLIP_AE_Encode(hidden_dim_clip, latent_dim, isAE=False)
                 model.load_state_dict(memory[label]['model'])
@@ -149,7 +136,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
             
             # get top3 incicies
             ans_logical = torch.stack(ans_logical, dim=1)
-            values, indices = ans_logical.topk(5, largest=False)
+            values, indices = ans_logical.topk(100, largest=False)
 
             _, indices_lb = base_is.topk(3)
             indices_lb, _ = torch.sort(indices_lb)
@@ -157,33 +144,46 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
             # calculate stats
             tot_num_logic += len(indices)
             for bi in range(len(indices_lb)):
-                print('******')
-                print(vocabs[indices_lb[bi][0]],vocabs[indices_lb[bi][1]],vocabs[indices_lb[bi][2]])
-                for i in indices[bi]:
-                    print(logical_vocabs[i])
-                
-                #print(lesson_retrieved)
-                #if rel == 'not':
-                #    attr = rel[1]
-                #    if attr not in indices[bi]:
-                #        top3_not += 1
-                #        tot_num_not += 1
-                #elif rel == 'and':
-                #    attr1 = rel[1]
-                #    attr2 = rel[2]
-                #    if attr1 in indices[bi] and attr2 in indices[bi]:
-                #        top3_and += 1
-                #        tot_num_and += 1
-                #elif rel == 'or':
-                #    attr1 = rel[1]
-                #    attr2 = rel[2]
-                #    if attr1 in indices[bi] or attr2 in indices[bi]:
-                #        top3_or += 1
-                #        tot_num_or += 1
+                # object
+                color = vocabs[indices_lb[bi][0]]
+                material = vocabs[indices_lb[bi][1]]
+                shape = vocabs[indices_lb[bi][2]]
+                atrs = [color, material, shape]
 
-            #tot_logical = tot_num_not + tot_num_and + tot_num_or
-            #print('Logical, tot, not, and , or')
-            #print(tot_logical / tot_num, top3_not / tot_num_not, top3_and / tot_num_and, top3_or / tot_num_or)
+                # check logical rep retrieved
+                for i in indices[bi]:
+                    # check validity
+                    prop = logical_vocabs[i].split(' ')
+
+                    if 'not' in prop:
+                        attr1 = s[1]
+                        attr2 = None
+                        tot_num_not += 1   
+
+                        if attr1 not in atrs:
+                            top3_not += 1
+
+                    elif 'and' in prop:
+                        attr1 = s[0]
+                        attr2 = s[2]
+                        tot_num_and += 1
+
+                        if attr1 in atrs and attr2 in atrs:
+                            top3_and += 1
+
+                    elif 'or' in prop:
+                        attr1 = s[0]
+                        attr2 = s[2]
+                        tot_num_or += 1
+
+                        if attr1 in atrs or attr2 in atrs:
+                            top3_or += 1
+                            
+    
+            tot_logical = tot_num_not + tot_num_and + tot_num_or
+            tot_score_logical = top3_not + top3_and + top3_or
+            print('Logical, tot, not, and , or')
+            print(tot_score_logical / tot_logical, top3_not / tot_num_not, top3_and / tot_num_and, top3_or / tot_num_or)
 
     return top3 / tot_num
 

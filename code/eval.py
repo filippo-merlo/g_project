@@ -156,7 +156,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                     prop = logical_vocabs[i].split(' ')
 
                     if 'not' in prop:
-                        attr1 = s[1]
+                        attr1 = prop[1]
                         attr2 = None
                         tot_num_not += 1   
 
@@ -164,16 +164,16 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                             top3_not += 1
 
                     elif 'and' in prop:
-                        attr1 = s[0]
-                        attr2 = s[2]
+                        attr1 = prop[0]
+                        attr2 = prop[2]
                         tot_num_and += 1
 
                         if attr1 in atrs and attr2 in atrs:
                             top3_and += 1
 
                     elif 'or' in prop:
-                        attr1 = s[0]
-                        attr2 = s[2]
+                        attr1 = prop[0]
+                        attr2 = prop[2]
                         tot_num_or += 1
 
                         if attr1 in atrs or attr2 in atrs:

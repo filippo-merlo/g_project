@@ -185,7 +185,8 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
             tot_score_logical = score_not + score_and + score_or
             print('LOGICAL: ','Tot:',tot_score_logical / tot_num_logical, 
             'Not:',score_not / tot_num_not, 'And:',score_and / tot_num_and, 'Or:',score_or / tot_num_or)
-            pprint('AND errors:','\n',errors_and)
+            print('AND errors:')
+            pprint(errors_and)
 
     return [top3 / tot_num, tot_score_logical/tot_num_logical]
 

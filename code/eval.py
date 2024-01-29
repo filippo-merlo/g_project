@@ -111,8 +111,8 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
                 if (ci == 1) and (mi == 1) and (si == 1):
                     top3 += 1
 
-            print('BASIC: ','Tot:',tot_num, 
-            '/n Color:',top3_color / tot_num, 'Material:',top3_material / tot_num, 'Shape:',top3_shape / tot_num, top3 / tot_num)
+            print('BASIC: ','Num:',tot_num, 
+            'Color:',top3_color / tot_num, 'Material:',top3_material / tot_num, 'Shape:',top3_shape / tot_num, 'Tot:',top3 / tot_num)
 
             rel_list = []
             ans_logical = []

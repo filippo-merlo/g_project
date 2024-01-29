@@ -136,10 +136,7 @@ for v in dic_train_logical.values():
 #		attr1 = n.split()[1]
 #		if attr1 not in o.split():
 #			_not += 1
-
-
-
-print(_not,_and,_or)
+#print(_not,_and,_or)
 
 all_vocabs = vocabs + logical_vocabs
 

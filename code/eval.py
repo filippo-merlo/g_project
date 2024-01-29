@@ -11,6 +11,8 @@ from models import *
 import pickle
 import argparse
 
+from pprint import pprint
+
 #print(torch.backends.mps.is_available())  # the MacOS is higher than 12.3+
 #print(torch.backends.mps.is_built())  # MPS is activated
 #device = torch.device('mps')
@@ -36,6 +38,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
 
         score_and = 0
         tot_num_and = 0
+        errors_and = dict()
 
         score_or = 0
         tot_num_or = 0
@@ -159,6 +162,17 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
 
                         if attr1 in atrs and attr2 in atrs:
                             score_and += 1
+                        else:
+                            def get_attr(lesson):
+                                for k,v in dic_test_logical.items():
+                                    if lesson in v:
+                                        return k 
+                            attr1 = get_attr(attr1)
+                            attr2 = get_attr(attr2)
+                            if attr1+'_and_'attr2 not in errors_and.keys():
+                                errors_and[attr1+'_and_'attr2] = 1
+                            errors_and[attr1+'_and_'attr2] += 1
+
 
                     elif 'or' in prop:
                         attr1 = prop[0]
@@ -171,6 +185,7 @@ def my_clip_evaluation(in_path, source, memory, in_base, types, dic, vocab):
             tot_score_logical = score_not + score_and + score_or
             print('LOGICAL: ','Tot:',tot_score_logical / tot_num_logical, 
             'Not:',score_not / tot_num_not, 'And:',score_and / tot_num_and, 'Or:',score_or / tot_num_or)
+            pprint('AND errors:','\n',errors_and)
 
     return [top3 / tot_num, tot_score_logical/tot_num_logical]
 

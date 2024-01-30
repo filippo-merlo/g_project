@@ -70,7 +70,28 @@ with torch.no_grad():
         #for attr in types_learning:
         for lesson in memory_base.keys():
             if 'decoder' in memory_base[lesson].keys(): 
+                # check if in the image bacth there is an image that has the attr
+                # if not, skip the attr
+                split_lesson = lesson.split()   
+                rels = ['and', 'or', 'not']
+                attrs = [x for x in split_lesson if x not in rels]
+                attrs_coded = [vocabs.index(x) for x in attrs]
+                check = True
+                for obj in idxs:
+                    tresh = len(attrs_coded)
+                    c = 0
+                    for attr in attrs_coded:
+                        if attr in obj:
+                            c += 1
+                    if c == tresh:
+                        print(obj,attrs_coded)
+                        check = False
+                        break
+                if check:
+                    continue
+                # get attr categoy
                 attr = get_key_from_value(dic, lesson)
+                # fill acc dict
                 if attr not in acc.keys():
                     acc[attr] = 0
                     n_trials_per_attr[attr] = 0
@@ -86,47 +107,44 @@ with torch.no_grad():
                 v, topk_idxs = disi.topk(1, largest=False)
                 answers[lesson] = [idxs[i] for i in topk_idxs]
 
-                for k in answers.keys():
-                    for coded in answers[k]:
+                for lesson in answers.keys():
+                    for coded in answers[lesson]:
                         color = vocabs[coded[0]]
                         material = vocabs[coded[1]]
                         shape = vocabs[coded[2]]
-                        if 'and' in k.split():
-                            l1 = k.split()[0]
-                            l2 = k.split()[2]
+                        if 'and' in lesson.split():
+                            l1 = lesson.split()[0]
+                            l2 = lesson.split()[2]
                             if l1 in [color, material, shape] and l2 in [color, material, shape]:
                                 acc[attr] += 1
-                        elif 'or' in k.split():
-                            l1 = k.split()[0]
-                            l2 = k.split()[2]
+                        elif 'or' in lesson.split():
+                            l1 = lesson.split()[0]
+                            l2 = lesson.split()[2]
                             if l1 in [color, material, shape] or l2 in [color, material, shape]:
                                 acc[attr] += 1
+                        elif 'not' in lesson.split():
+                            l1 = lesson.split()[1]
+                            if l1 not in [color, material, shape]:
+                                acc[attr] += 1
                         else:
-                            if k in [color, material, shape]:
+                            if lesson in [color, material, shape]:
                                 acc[attr] += 1
 
 # print the results
-for k in acc.keys():
-    print(f'{k}: ',acc[k]/n_trials_per_attr[k])
-#%%
-color_acc = acc['color']/(len(colors)*n_trials)
-material_acc = acc['material']/(len(materials)*n_trials)
-shape_acc = acc['shape']/(len(shapes)*n_trials)
-print('Color accuracy: {}'.format(color_acc))
-print('Material accuracy: {}'.format(material_acc))
-print('Shape accuracy: {}'.format(shape_acc))
-tot_acc = (color_acc+material_acc+shape_acc)/3
-print('Total accuracy: {}'.format(tot_acc))
-
 import matplotlib.pyplot as plt
 
 # Accuracy values
-categories = ['Color', 'Material', 'Shape', 'Total']
-accuracies = [color_acc, material_acc, shape_acc, tot_acc]
+categories = []
+accuracies = []
+
+for k in acc.keys():
+    print(f'{k}: ',acc[k]/n_trials_per_attr[k])
+    categories.append(k)
+    accuracies.append(acc[k]/n_trials_per_attr[k])
 
 # Plotting
 plt.figure(figsize=(8, 5))
-plt.bar(categories, accuracies, color=['blue', 'green', 'orange', 'red'])
+plt.bar(categories, accuracies)
 plt.ylim(0, 1)  # Setting y-axis limits to represent accuracy values between 0 and 1
 plt.title('Accuracy Metrics')
 plt.xlabel('Categories')

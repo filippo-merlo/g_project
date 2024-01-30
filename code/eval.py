@@ -236,3 +236,4 @@ if __name__ == "__main__":
             memory_complete[k] = memory[k]
 
     t = my_clip_evaluation_base(args.in_path, source, memory_complete, in_base, types, dic, vocab)
+    t2 = my_clip_evaluation_logical(args.in_path, source, memory_complete, in_base, types, dic, vocab)

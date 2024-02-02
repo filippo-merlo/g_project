@@ -11,14 +11,11 @@ from PIL import Image
 
 from torch.utils.data import DataLoader
 
-import torch.multiprocessing as mp
-from torch.utils.data.distributed import DistributedSampler
-from torch.nn.parallel import DistributedDataParallel as DDP
-from torch.distributed import init_process_group, destroy_process_group
 
 from config import *
 from dataset import *
 from models import *
+from util import *
 
 def my_train_clip_encoder(dt, memory, attr, lesson):
 	# get model

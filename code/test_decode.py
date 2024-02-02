@@ -19,7 +19,7 @@ print(torch.backends.mps.is_available()) #the MacOS is higher than 12.3+
 print(torch.backends.mps.is_built()) #MPS is activated
 device = torch.device('mps')
 
-memory_path = '/Users/filippomerlo/Desktop/memories/best_mem_decoder_logic_small.pickle'
+memory_path = '/Users/filippomerlo/Desktop/memories/mem_decoder_logic_small_mse.pickle'
 
 with open(memory_path, 'rb') as f:
         memory_base = pickle.load(f)
@@ -48,7 +48,7 @@ data_loader = DataLoader(dt, batch_size=100, shuffle=True)
 train_labels, train_features = next(iter(data_loader))
 _, idxs = train_labels.topk(3)
 idxs, _ = torch.sort(idxs)
-
+#%%
 # some operations
 with torch.no_grad():
     acc = dict()
@@ -84,7 +84,6 @@ with torch.no_grad():
                         if attr in obj:
                             c += 1
                     if c == tresh:
-                        print(obj,attrs_coded)
                         check = False
                         break
                 if check:
@@ -151,3 +150,46 @@ plt.xlabel('Categories')
 plt.ylabel('Accuracy')
 plt.show()
 
+#%% TRY TO DO ALGEBRIAC OPERATIONS WITH LOGICAL 
+
+for k in memory_base.keys():
+    if 'decoder' in memory_base[k].keys():
+        print(k)
+
+#%%
+data_loader = DataLoader(dt, batch_size=200, shuffle=True)
+train_labels, train_features = next(iter(data_loader))
+_, idxs = train_labels.topk(3)
+idxs, _ = torch.sort(idxs)
+ans = []
+for i,im in enumerate(train_features):
+    ans.append(clip_model.encode_image(im.unsqueeze(0).to(device)).squeeze(0))
+ans = torch.stack(ans)
+#%%
+query1 = 'white or cube'
+query2 = 'not white'
+query3 = 'not red'
+query4 = 'rubber or suzanne'
+complete_query = [query1, query2]
+
+reps = []
+for q in complete_query:
+    # get reps decoded
+    centroid = memory_base[q]['centroid'].to(device)
+    dec = Decoder(latent_dim).to(device)
+    dec.load_state_dict(memory_base[q]['decoder'])
+    decoded_rep = dec(centroid)
+    reps.append(decoded_rep)
+
+answers = dict()
+query_rep = torch.stack(reps).sum(dim=0)
+C = query_rep.repeat(ans.shape[0], 1)
+disi = ((ans - C)**2).mean(dim=1).detach().to('cpu')
+v, topk_idxs = disi.topk(10, largest=False)
+answers[q] = [idxs[i] for i in topk_idxs]
+for lesson in answers.keys():
+    for coded in answers[lesson]:
+        color = vocabs[coded[0]]
+        material = vocabs[coded[1]]
+        shape = vocabs[coded[2]]
+        print(color, material, shape)

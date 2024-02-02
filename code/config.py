@@ -183,7 +183,7 @@ bsn_test_2_old = "bsn_test_2_old.txt"
 # train parameters
 resize = 224
 lr = 1e-3
-epochs = 1
+epochs = 2
 
 sim_batch = 132
 gen_batch = 132

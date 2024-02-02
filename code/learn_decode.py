@@ -36,7 +36,7 @@ dec_types_logical_with_learning += types_learning
 def train_decoder(in_path, out_path, model_name, memory_path, 
                   clip_model, clip_preprocessor,
                   source, in_base, types, dic, vocab, 
-                  epochs=3, lr=0.001, batch_size=108, latent_dim=16):
+                  epochs=2, lr=0.001, batch_size=108, latent_dim=16):
     
     batch_size = batch_size
     with open(memory_path, 'rb') as f:

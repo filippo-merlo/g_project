@@ -43,12 +43,19 @@ clip_model, clip_preprocessor = clip.load("ViT-B/32", device=device)
 clip_model.eval()
 
 dt = MyDataset(in_path, source, in_base, types, dic, vocab, clip_preprocessor)
+#for k,v, in rules.items():
+#    print(v)
+#    a,b,c,d = dt.get_batches_for_rules(v, batch_size = 1, force_rule = True)
+#    for i, _ in enumerate(a):
+#        print(a[i])
+#        print(c[i])
+
 data_loader = DataLoader(dt, batch_size=100, shuffle=True)
 
 train_labels, train_features = next(iter(data_loader))
 _, idxs = train_labels.topk(3)
 idxs, _ = torch.sort(idxs)
-#%%
+
 # some operations
 with torch.no_grad():
     acc = dict()
@@ -169,8 +176,8 @@ ans = torch.stack(ans)
 query1 = 'white or cube'
 query2 = 'not white'
 query3 = 'not red'
-query4 = 'rubber or suzanne'
-complete_query = [query1, query2]
+query4 = 'rubber and cube'
+complete_query = [query4]
 
 reps = []
 for q in complete_query:

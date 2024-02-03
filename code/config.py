@@ -1,4 +1,5 @@
-#%%
+from itertools import product
+
 '''
 Learning Attributes:
 	- Color (6)
@@ -42,6 +43,7 @@ scale_test = ['small', 'medium', 'large']
 stretch_test = ['normal', 'x', 'y', 'z']
 shade_test = ['base', 'light', 'dark']
 
+#
 others = views + brightness + scale_test + stretch_test + shade_test
 
 # Types of images
@@ -73,8 +75,8 @@ types_variability = ['scale', 'stretch', 'shade']
 types_all = ['color', 'material', 'shape', 'brightness',
 				'view', 'shade', 'stretch', 'scale']
 
-# make dicts for logical traing and testing
-relations = ['and', 'or', 'not'] # <--- new 
+### make dicts for logical traing and testing <--- new 
+relations = ['and', 'or', 'not'] 
 types_logical = [] 
 for i in types_learning:
 	for j in relations:
@@ -88,9 +90,6 @@ for i in types_learning:
 					else:
 						types_logical.append(i+' '+j+' '+h)
 types_logical_with_learning =  types_logical + types_learning 
-
-from itertools import product
-from pprint import pprint
 
 dic_train_logical = dic_train.copy()
 for rel in types_logical:
@@ -108,38 +107,13 @@ dic_test_logical["scale"] = dic_test["scale"]
 dic_test_logical["stretch"] = dic_test["stretch"]
 dic_test_logical["shade"] = dic_test["shade"]
 
-
-
 all_vocabs = []
 logical_vocabs = []
 for v in dic_train_logical.values():
 	for n in v:
 		if n not in others and n not in vocabs:
 			logical_vocabs.append(n)
-
-#o = 'red plastic cone'
-#_or = 0
-#_and = 0
-#_not = 0
-#for n in logical_vocabs:
-#	if 'and' in n.split():
-#		attr1 = n.split()[0]
-#		attr2 = n.split()[2]
-#		if attr1 in o.split() and attr2 in o.split():
-#			_and += 1
-#	elif 'or' in n.split():
-#		attr1 = n.split()[0]
-#		attr2 = n.split()[2]
-#		if attr1 in o.split() or attr2 in o.split():
-#			_or += 1
-#	elif 'not' in n.split():
-#		attr1 = n.split()[1]
-#		if attr1 not in o.split():
-#			_not += 1
-#print(_not,_and,_or)
-
 all_vocabs = vocabs + logical_vocabs
-
 
 # count n of concepts
 
@@ -158,9 +132,7 @@ print(types_logical_with_learning_6)
 types_logical_with_learning_7 = types_logical_with_learning[12:]
 print(types_logical_with_learning_7)
 
-#print(all_vocabs)
-#pprint(dic_train_logical)
-#print(types_logical_with_learning)
+# <--- end new
 
 # paths and filenames
 bn_n_train = "bn_n_train.txt"
@@ -192,3 +164,34 @@ batch_size = 33
 # model architecture
 hidden_dim_clip = 128
 latent_dim = 16
+
+# RULES LEARNING
+# make rules 
+# 1. if color is red then shape is cube
+rule_1 = [('color','red'), ('shape',['cube'])]
+# 2. if color is blue then shape is sphere
+rule_2 = [('color','blue'), ('shape',['sphere'])]
+# 3. if shape is cube then color is red
+rule_3 = [('shape','cube'), ('color',['red'])]
+# 4. if shape is sphere then color is blue
+rule_4 = [('shape','sphere'), ('color',['blue'])]
+
+# 5. if color is red then shape is not cube
+rule_5 = [('color','red'), ('shape',[i for i in shapes if i != 'cube'])]
+# 6. if color is blue then shape is not sphere
+rule_6 = [('color','blue'), ('shape',[i for i in shapes if i != 'sphere'])]
+# 7. if shape is cube then color is not red
+rule_7 = [('shape','cube'), ('color',[i for i in colors if i != 'red'])]
+# 8. if shape is sphere then color is not blue
+rule_8 = [('shape','sphere'), ('color',[i for i in colors if i != 'blue'])]
+
+rules = {
+	'rule_1': rule_1, 
+	'rule_2': rule_2,
+	'rule_3': rule_3,
+	'rule_4': rule_4,
+	'rule_5': rule_5,
+	'rule_6': rule_6,
+	'rule_7': rule_7,
+	'rule_8': rule_8
+}

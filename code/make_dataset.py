@@ -5,7 +5,6 @@ from config import *
 from dataset import MyDataset
 from util import *
 import argparse
-from pprint import pprint
 
 # Function to load a list from a file using pickle
 def load_list(file_path):
@@ -37,10 +36,13 @@ def get_datasets(in_path,out_path):
     for parameters in parameters_list:
         dt = MyDataset(in_path, source, in_base, types, dic, vocab,
                             clip_preprocessor=clip_preprocessor)
+        
         for attribute, lessons in dic_train_logical.items():
             l = list(dic_train_logical.keys())
-            print(l.index(attribute)/len(dic_train_logical.items()),'%')
+            print('Attributes completed:',l.index(attribute)/len(dic_train_logical.items()),'%')
+
             for i in range(500):
+
                 for lesson in lessons:
                     base_names_sim, images_sim, base_names_dif, images_dif = dt.get_paired_batches(attribute, lesson, batch_size = 132)
                     all_lessons = load_list(out_path)

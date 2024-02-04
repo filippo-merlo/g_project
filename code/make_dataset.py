@@ -51,8 +51,8 @@ def get_datasets(in_path,out_path):
                     all_lessons.append(
                         [
                         attribute,lesson,
-                        base_names_sim,images_sim,
-                        base_names_dif,images_dif
+                        images_sim,images_dif,
+                        base_names_sim,base_names_dif
                         ]
                     )
                     save_list(out_path, all_lessons)

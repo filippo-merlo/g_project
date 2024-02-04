@@ -28,12 +28,12 @@ def get_datasets(in_path,out_path):
         ['test', bn_test, tyimgs],
     ]
     dic = dic_train_logical
-    source, in_base, types = parameters
     vocab = all_vocabs
     clip_model, clip_preprocessor = clip.load("ViT-B/32", device=device)
     clip_model.eval()
 
     for parameters in parameters_list:
+        source, in_base, types = parameters
         dt = MyDataset(in_path, source, in_base, types, dic, vocab,
                             clip_preprocessor=clip_preprocessor)
         
@@ -53,7 +53,7 @@ def get_datasets(in_path,out_path):
                         base_names_dif,images_dif
                         ]
                     )
-                    out_path = os.path.join(out_path,parameters[0]+'_dataset.pickle')
+                    out_path = os.path.join(out_path, parameters[0]+'_dataset.pickle')
                     save_list(out_path, all_lessons)
 
 if __name__ == '__main__':

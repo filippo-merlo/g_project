@@ -43,6 +43,7 @@ def get_datasets(in_path,out_path):
             print('Attributes completed:',l.index(attribute)/len(dic_train_logical.items()),'%')
 
             for i in range(500):
+                print('Batches completed:',i/500,'%')
 
                 for lesson in lessons:
                     base_names_sim, images_sim, base_names_dif, images_dif = dt.get_paired_batches(attribute, lesson, batch_size = 132)

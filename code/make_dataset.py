@@ -34,6 +34,7 @@ def get_datasets(in_path,out_path):
 
     for parameters in parameters_list:
         source, in_base, types = parameters
+        out_path = os.path.join(out_path, parameters[0]+'_dataset.pickle')
         dt = MyDataset(in_path, source, in_base, types, dic, vocab,
                             clip_preprocessor=clip_preprocessor)
         
@@ -45,7 +46,7 @@ def get_datasets(in_path,out_path):
 
                 for lesson in lessons:
                     base_names_sim, images_sim, base_names_dif, images_dif = dt.get_paired_batches(attribute, lesson, batch_size = 132)
-                    all_lessons = load_list(os.path.join(out_path, parameters[0]+'_dataset.pickle'))
+                    all_lessons = load_list(out_path)
                     all_lessons.append(
                         [
                         attribute,lesson,
@@ -53,7 +54,6 @@ def get_datasets(in_path,out_path):
                         base_names_dif,images_dif
                         ]
                     )
-                    out_path = os.path.join(out_path, parameters[0]+'_dataset.pickle')
                     save_list(out_path, all_lessons)
 
 if __name__ == '__main__':

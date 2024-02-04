@@ -45,7 +45,7 @@ def get_datasets(in_path,out_path):
 
                 for lesson in lessons:
                     base_names_sim, images_sim, base_names_dif, images_dif = dt.get_paired_batches(attribute, lesson, batch_size = 132)
-                    all_lessons = load_list(out_path)
+                    all_lessons = load_list(os.path.join(out_path, parameters[0]+'_dataset.pickle'))
                     all_lessons.append(
                         [
                         attribute,lesson,

@@ -24,7 +24,7 @@ def save_list(file_path, data):
 # Build the dataset object
 def get_datasets(in_path,out_path):
     parameters_list = [
-        ['train', bn_train, 'rgba'],
+        ['train', bn_train, ['rgba']],
         ['test', bn_test, tyimgs],
     ]
     dic = dic_train_logical

@@ -9,6 +9,7 @@ import argparse
 from PIL import Image
 import re
 
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Build the dataset object
 def get_preprocessed_images(in_path,out_path):
@@ -32,7 +33,7 @@ def get_preprocessed_images(in_path,out_path):
                 out_file_path = os.path.join(out_path, images_set, filename)
                 out_file_path = re.sub(r'\.png$', '', out_file_path, flags=re.IGNORECASE)
                 with open(out_file_path+'.pickle', 'wb') as file:
-                    pickle.dump(emb, file)
+                    pickle.dump(emb.to('cpu'), file)
 
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser()

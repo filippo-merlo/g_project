@@ -28,7 +28,8 @@ def get_preprocessed_images(in_path,out_path):
         for filename in os.listdir(folder_path):
             file_path = os.path.join(folder_path, filename)
             if '.png' in file_path:
-                image = clip_preprocessor(Image.open(file_path)).to(device)
+                image = [Image.open(file_path)]
+                image = clip_preprocessor(image).to(device)
                 print(image.shape)
                 with torch.no_grad():
                     emb = clip_model.encode_image(image).float()

@@ -332,3 +332,149 @@ class MyDataset():
 		return base_names_sim, images_sim, base_names_dif, images_dif
 
 
+# get paired batches with names only:
+	def get_paired_batches_names(self, attribute, lesson, batch_size = 132):
+		sim_batch = batch_size
+		base_names_sim = []
+		base_names_dif = []
+
+		def get_random_attribute(attribute_list, exclude=None):
+			attr = random.choice(attribute_list)
+			while attr == exclude:
+				attr = random.choice(attribute_list)
+			return attr
+
+		def create_base_name(names_dic):
+			return f'{names_dic["color"]}_{names_dic["material"]}_{names_dic["shape"]}_shade_{names_dic["shade"]}_stretch_{names_dic["stretch"]}_scale_{names_dic["scale"]}_brightness_{names_dic["brightness"]}_view_{names_dic["view"]}'
+
+		if 'and' in attribute.split() or 'or' in attribute.split():
+			lesson = (lesson.split()[0], lesson.split()[2])
+			ats = attribute.split()
+			attribute1 = ats[0]
+			attribute2 = ats[2]
+		elif 'not' in attribute.split():
+			lesson = lesson.split()[1]
+			attribute1 = attribute.split()[1]
+			attribute2 = None
+
+		if ' ' not in attribute: # if the attribute is not logical
+			while len(base_names_sim) < sim_batch: #133
+				names_dic_sim = {}
+				names_dic_dif = {}
+
+				for k, v in self.dic_without_logical.items(): # iterate on 'attribute_type':[list of attributes]
+					if k == attribute: # if the attribute is the one we want to teach e.g. color
+						names_dic_sim[k] = lesson # we take the lesson e.g. red
+						names_dic_dif[k] = get_random_attribute(v,lesson)
+					else:
+						tpo = get_random_attribute(v) # we take a random attribute from the list of attributes e.g. blue
+						names_dic_sim[k] = tpo 
+						names_dic_dif[k] = tpo 
+				base_name_sim = create_base_name(names_dic_sim) # we create the name of the image from the dict
+				base_name_dif = create_base_name(names_dic_dif) # we create the name of the image from the dict		
+				
+				if base_name_sim in self.name_set and base_name_dif in self.name_set:
+					base_names_sim.append(base_name_sim)
+					base_names_dif.append(base_name_dif)
+
+		else: # if the attribute is logical
+			while len(base_names_sim) < sim_batch: #133
+				names_dic_sim = {}
+				names_dic_dif = {}
+				if 'and' in attribute.split():
+					for negative_case in range(3): # 0,1,2 [negatives]
+						for k, v in self.dic_without_logical.items(): # iterate on 'attribute_type':[list of attributes]
+							if k == attribute1:
+								names_dic_sim[k] = lesson[0]
+								if negative_case == 0:
+									names_dic_dif[k] = lesson[0]
+								else:
+									names_dic_dif[k] = get_random_attribute(v,lesson[0])
+							elif k==attribute2:
+								names_dic_sim[k] = lesson[1]
+								if negative_case == 1:
+									names_dic_dif[k] = lesson[1]
+								else:
+									names_dic_dif[k] = get_random_attribute(v,lesson[1])
+							else:
+								tpo = get_random_attribute(v) # we take a random attribute from the list of attributes e.g. blue
+								names_dic_sim[k] = tpo 
+								names_dic_dif[k] = tpo 
+						base_name_sim = create_base_name(names_dic_sim) # we create the name of the image from the dict
+						base_name_dif = create_base_name(names_dic_dif) # we create the name of the image from the dict
+						
+						if base_name_sim in self.name_set and base_name_dif in self.name_set:
+							base_names_sim.append(base_name_sim)
+							base_names_dif.append(base_name_dif)
+
+				elif 'or' in attribute.split():
+					if attribute1 == attribute2:
+						for negative_case in range(2): # 0,1 [negatives]
+							for k, v in self.dic_without_logical.items(): # iterate on 'attribute_type':[list of attributes]
+								if k == attribute1:
+									tp = get_random_attribute(v)
+									while (tp == lesson[0] or tp == lesson[1]):
+										tp = get_random_attribute(v)
+									names_dic_dif[k] = tp
+
+									if negative_case == 0:
+										names_dic_sim[k] = lesson[0]
+									elif negative_case == 1:
+										names_dic_sim[k] = lesson[1]
+								else:
+									tpo = get_random_attribute(v) # we take a random attribute from the list of attributes e.g. blue
+									names_dic_sim[k] = tpo 
+									names_dic_dif[k] = tpo 
+							base_name_sim = create_base_name(names_dic_sim) # we create the name of the image from the dict
+							base_name_dif = create_base_name(names_dic_dif) # we create the name of the image from the dict
+							
+							if base_name_sim in self.name_set and base_name_dif in self.name_set:
+								base_names_sim.append(base_name_sim)
+								base_names_dif.append(base_name_dif)
+
+					else:
+						for negative_case in range(3): # 0,1,2 [negatives]
+							for k, v in self.dic_without_logical.items(): # iterate on 'attribute_type':[list of attributes]
+								if k == attribute1:
+									names_dic_dif[k] = get_random_attribute(v, lesson[0])
+									
+									if negative_case == 0 or negative_case == 1:
+										names_dic_sim[k] = lesson[0]
+									else:
+										names_dic_sim[k] = names_dic_dif[k]
+
+								elif k==attribute2:
+									names_dic_dif[k] = get_random_attribute(v,lesson[1])
+
+									if negative_case == 0 or negative_case == 2:
+										names_dic_sim[k] = lesson[1]
+									else:
+										names_dic_sim[k] = names_dic_dif[k]
+								else:
+									tpo = get_random_attribute(v) # we take a random attribute from the list of attributes e.g. blue
+									names_dic_sim[k] = tpo 
+									names_dic_dif[k] = tpo 
+							base_name_sim = create_base_name(names_dic_sim) # we create the name of the image from the dict
+							base_name_dif = create_base_name(names_dic_dif) # we create the name of the image from the dict
+							
+							if base_name_sim in self.name_set and base_name_dif in self.name_set:
+								base_names_sim.append(base_name_sim)
+								base_names_dif.append(base_name_dif)
+
+				elif 'not' in attribute.split():
+					for k, v in self.dic_without_logical.items(): # iterate on 'attribute_type':[list of attributes]
+						if k == attribute1: # if the attribute is the one we want to teach e.g. color
+							names_dic_dif[k] = lesson # we take the lesson e.g. red
+							names_dic_sim[k] = get_random_attribute(v,lesson)
+						else:
+							tpo = get_random_attribute(v) # we take a random attribute from the list of attributes e.g. plastic
+							names_dic_sim[k] = tpo 
+							names_dic_dif[k] = tpo 
+					base_name_sim = create_base_name(names_dic_sim) # we create the name of the image from the dict
+					base_name_dif = create_base_name(names_dic_dif) # we create the name of the image from the dict		
+					
+					if base_name_sim in self.name_set and base_name_dif in self.name_set:
+						base_names_sim.append(base_name_sim)
+						base_names_dif.append(base_name_dif)
+
+		return base_names_sim, base_names_dif

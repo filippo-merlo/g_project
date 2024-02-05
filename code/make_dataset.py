@@ -1,4 +1,5 @@
 #%%
+import os
 import pickle
 import clip 
 from config import *
@@ -46,12 +47,11 @@ def get_datasets(in_path,out_path):
                  
                  for i in range(500):
                     print('Batches completed:',i/500,'%')
-                    base_names_sim, images_sim, base_names_dif, images_dif = dt.get_paired_batches(attribute, lesson, batch_size = 132)
+                    base_names_sim, images_sim, base_names_dif, images_dif = dt.get_paired_batches_names(attribute, lesson, batch_size = 132)
                     all_lessons = load_list(out_path)
                     all_lessons.append(
                         [
                         attribute,lesson,
-                        images_sim,images_dif,
                         base_names_sim,base_names_dif
                         ]
                     )

@@ -30,9 +30,9 @@ def get_preprocessed_images(in_path,out_path):
             if '.png' in file_path:
                 image = Image.open(file_path)
                 image = clip_preprocessor(image)
-                
+
                 with torch.no_grad():
-                    emb = clip_model.encode_image(image).float()
+                    emb = clip_model.encode_image(image)
                     out_file_path = os.path.join(out_path, images_set, filename)
                     out_file_path = re.sub(r'\.png$', '', out_file_path, flags=re.IGNORECASE)
                     with open(out_file_path+'.pickle', 'wb') as file:

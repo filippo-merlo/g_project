@@ -28,10 +28,11 @@ def get_preprocessed_images(in_path,out_path):
             file_path = os.path.join(folder_path, filename)
             if '.png' in file_path:
                 image = clip_preprocessor(Image.open(file_path))
+                emb = clip_model.encode_image(image).float()
                 out_file_path = os.path.join(out_path, images_set, filename)
                 out_file_path = re.sub(r'\.png$', '', out_file_path, flags=re.IGNORECASE)
                 with open(out_file_path+'.pickle', 'wb') as file:
-                    pickle.dump(image, file)
+                    pickle.dump(emb, file)
 
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser()

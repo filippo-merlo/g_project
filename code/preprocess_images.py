@@ -26,7 +26,7 @@ def get_preprocessed_images(in_path,out_path):
         folder_path = os.path.join(in_path, images_set)
         for filename in os.listdir(folder_path):
             file_path = os.path.join(folder_path, filename)
-            if re.search(re.escape(r'\.png$'),file_path):
+            if '.png' in file_path:
                 image = clip_preprocessor(Image.open(file_path))
                 out_file_path = os.path.join(out_path, images_set, filename)
                 out_file_path = re.sub(r'\.png$', '', out_file_path, flags=re.IGNORECASE)

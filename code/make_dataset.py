@@ -5,7 +5,6 @@ import clip
 from config import *
 from dataset import MyDataset
 from util import *
-import argparse
 
 # Function to load a list from a file using pickle
 def load_list(file_path):
@@ -26,7 +25,7 @@ def save_list(file_path, data):
 def get_datasets(in_path,out_path):
     parameters_list = [
         ['train', bn_train, ['rgba']],
-        ['test', bn_test, tyimgs],
+        ['test', bn_test, ['rgba']],
     ]
     dic = dic_train_logical
     vocab = all_vocabs
@@ -47,7 +46,7 @@ def get_datasets(in_path,out_path):
                  
                  for i in range(500):
                     print('Batches completed:',i/500,'%')
-                    base_names_sim, images_sim, base_names_dif, images_dif = dt.get_paired_batches_names(attribute, lesson, batch_size = 132)
+                    base_names_sim, base_names_dif = dt.get_paired_batches_names(attribute, lesson, batch_size = 132)
                     all_lessons = load_list(out_path)
                     all_lessons.append(
                         [
@@ -56,16 +55,3 @@ def get_datasets(in_path,out_path):
                         ]
                     )
                     save_list(out_path, all_lessons)
-
-if __name__ == '__main__':
-    argparser = argparse.ArgumentParser()
-
-    argparser.add_argument('--in_path', '-i',
-                help='Data input path', required=True)
-    argparser.add_argument('--out_path', '-o',
-                help='Dataset folder output path', required=True)
-
-    args = argparser.parse_args()
-
-    get_datasets(args.in_path,args.out_path)
-    

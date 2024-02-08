@@ -127,41 +127,6 @@ types_logical_with_learning_7 = types_logical_with_learning[12:]
 
 # <--- end new
 
-# Objects to remove from train test
-remove_from_train = [
-    ('yellow', 'metal', 'torus'),
-    ('white', 'rubber', 'torus_knot'),
-    ('red', 'metal', 'torus'),
-    ('blue', 'rubber', 'sponge'),
-    ('aqua', 'glass', 'suzanne'),
-    ('purple', 'glass', 'spot'),
-    ('purple', 'metal', 'teapot'),
-    ('green', 'metal', 'cube'),
-    ('blue', 'rubber', 'cylinder'),
-    ('white', 'plastic', 'torus'),
-    ('red', 'rubber', 'spot'),
-    ('blue', 'glass', 'spot'),
-    ('blue', 'plastic', 'torus_knot'),
-    ('aqua', 'metal', 'torus'),
-    ('white', 'metal', 'gear'),
-    ('green', 'metal', 'gear'),
-    ('yellow', 'plastic', 'torus_knot'),
-    ('green', 'plastic', 'gear'),
-    ('red', 'plastic', 'sphere'),
-    ('purple', 'rubber', 'sphere'),
-    ('brown', 'metal', 'sponge'),
-    ('yellow', 'plastic', 'cylinder'),
-    ('red', 'glass', 'cone'),
-    ('aqua', 'glass', 'spot'),
-    ('yellow', 'rubber', 'torus'),
-    ('brown', 'glass', 'suzanne'),
-    ('green', 'rubber', 'cylinder'),
-    ('red', 'rubber', 'sphere'),
-    ('purple', 'plastic', 'cylinder'),
-    ('yellow', 'glass', 'sphere'),
-    ('blue', 'glass', 'cone'),
-    ('purple', 'plastic', 'cube')]
-
 # paths and filenames
 bn_n_train = "bn_n_train.txt"
 bsn_novel_train_1 = "bsn_novel_train_1.txt"
@@ -192,3 +157,34 @@ batch_size = 33
 # model architecture
 hidden_dim_clip = 128
 latent_dim = 16
+
+# RULES LEARNING
+# make rules 
+# 1. if color is red then shape is cube
+rule_1 = [('color','red'), ('shape',['cube'])]
+# 2. if color is blue then shape is sphere
+rule_2 = [('color','blue'), ('shape',['sphere'])]
+# 3. if shape is cube then color is red
+rule_3 = [('shape','cube'), ('color',['red'])]
+# 4. if shape is sphere then color is blue
+rule_4 = [('shape','sphere'), ('color',['blue'])]
+
+# 5. if color is red then shape is not cube
+rule_5 = [('color','red'), ('shape',[i for i in shapes if i != 'cube'])]
+# 6. if color is blue then shape is not sphere
+rule_6 = [('color','blue'), ('shape',[i for i in shapes if i != 'sphere'])]
+# 7. if shape is cube then color is not red
+rule_7 = [('shape','cube'), ('color',[i for i in colors if i != 'red'])]
+# 8. if shape is sphere then color is not blue
+rule_8 = [('shape','sphere'), ('color',[i for i in colors if i != 'blue'])]
+
+rules = {
+	'rule_1': rule_1, 
+	'rule_2': rule_2,
+	'rule_3': rule_3,
+	'rule_4': rule_4,
+	'rule_5': rule_5,
+	'rule_6': rule_6,
+	'rule_7': rule_7,
+	'rule_8': rule_8
+}

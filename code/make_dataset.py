@@ -52,7 +52,7 @@ def get_datasets(in_path,out_path):
         out_path = os.path.join(out_path, parameters[0]+'_dataset.json')
         save_list(out_path, []) ## After doing this one time, comment this line
         dt = MyDataset(in_path, source, in_base, types, dic, vocab)
-        print(all_vocabs)
+        pprint(dic_train_logical)
         for lesson in tqdm(all_vocabs, desc="Lessons", unit="lesson"):
             attribute = get_key_from_value(dic_train_logical, lesson)
 

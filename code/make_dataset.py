@@ -7,19 +7,19 @@ from dataset import MyDataset
 from util import *
 import argparse
 
-# Function to load a list from a file using pickle
+# Function to load a list from a file using json
 def load_list(file_path):
     try:
-        with open(file_path, 'rb') as file:
+        with open(file_path, 'r') as file:
             data = json.load(file)
         return data
     except FileNotFoundError:
         # If the file does not exist yet, return an empty list
         return []
 
-# Function to save a list to a file using pickle
+# Function to save a list to a file using json
 def save_list(file_path, data):
-    with open(file_path, 'wb') as file:
+    with open(file_path, 'w') as file:
         json.dump(data, file)
 
 # Build the dataset object

@@ -1,3 +1,4 @@
+#%%
 from itertools import product
 
 '''
@@ -192,3 +193,4 @@ batch_size = 33
 # model architecture
 hidden_dim_clip = 128
 latent_dim = 16
+

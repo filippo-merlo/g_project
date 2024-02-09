@@ -55,11 +55,12 @@ def get_datasets(in_path,out_path):
 
         for lesson in tqdm(all_vocabs, desc="Lessons", unit="lesson"):
             attribute = get_key_from_value(dic_train_logical, lesson)
-
+            all_lessons = load_list(out_path)
+            new_batches = []
             for i in tqdm(range(500), desc="Batches", unit="batch"):               
                 base_names_sim, base_names_dif = dt.get_paired_batches_names(attribute, lesson, 132, train)
-                all_lessons = load_list(out_path)
-                all_lessons.append(
+                
+                new_batches.append(
                     {
                     'attribute' : attribute,
                     'lesson' : lesson,
@@ -67,7 +68,8 @@ def get_datasets(in_path,out_path):
                     'base_names_sim' : base_names_dif
                     }
                 )
-                save_list(out_path, all_lessons)
+            all_lessons += new_batches
+            save_list(out_path, all_lessons)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Get datasets')

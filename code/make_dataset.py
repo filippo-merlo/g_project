@@ -48,7 +48,7 @@ def get_datasets(in_path,out_path):
         dt = MyDataset(in_path, source, in_base, types, dic, vocab)
         new_batches = []
 
-        for i, lesson in tqdm(all_vocabs):
+        for lesson in tqdm(all_vocabs):
             attribute = get_key_from_value(dic_train_logical, lesson)
             
             for i in range(500):               

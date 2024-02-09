@@ -41,9 +41,9 @@ def get_datasets(in_path,out_path):
     vocab = vocabs
 
     for parameters in parameters_list:
-        source, in_base, types, dic, train = parameters
+        source, in_base, types, dic, train, dataset_name = parameters
 
-        new_out_path = os.path.join(out_path, parameters[0]+'_dataset.json')
+        new_out_path = os.path.join(out_path, dataset_name+'_dataset.json')
         save_list(new_out_path, []) ## After doing this one time, comment this line
         dt = MyDataset(in_path, source, in_base, types, dic, vocab)
         new_batches = []

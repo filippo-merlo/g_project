@@ -34,28 +34,27 @@ def get_key_from_value(dictionary, target_value):
 # Build the dataset object
 def get_datasets(in_path,out_path):
     parameters_list = [
-        ['train', bn_train, ['rgba']],
-        ['test', bn_test, ['rgba']],
+        ['train_novel_obj', bn_train, ['rgba'], dic_train_logical],
+        ['test_novel_obj', bn_test, ['rgba'], dic_train_logical],
+        ['train_var', bn_train, ['rgba'], dic_train_logical],
+        ['test_var', bn_test, ['rgba'], dic_test_logical],
     ]
-    dic = dic_train_logical
-    vocab = all_vocabs
-    clip_model, clip_preprocessor = clip.load("ViT-B/32", device=device)
-    clip_model.eval()
+    vocab = vocabs
 
     for parameters in parameters_list:
-        source, in_base, types = parameters
-        if source == 'train':
+        source, in_base, types, dic = parameters
+
+        if source == 'train_novel_obj':
             train = True
         else:
             train = False
 
         out_path = os.path.join(out_path, parameters[0]+'_dataset.json')
         save_list(out_path, []) ## After doing this one time, comment this line
-        dt = MyDataset(in_path, source, in_base, types, dic, vocab,
-                            clip_preprocessor=clip_preprocessor)
+        dt = MyDataset(in_path, source, in_base, types, dic, vocab)
         
-        for lesson in tqdm(vocab, desc="Lessons", unit="lesson"):
-            attribute = get_key_from_value(dic, lesson)
+        for lesson in tqdm(all_vocabs, desc="Lessons", unit="lesson"):
+            attribute = get_key_from_value(dic_train_logical, lesson)
 
             for i in tqdm(range(500), desc="Batches", unit="batch"):               
                 base_names_sim, base_names_dif = dt.get_paired_batches_names(attribute, lesson, 132, train)

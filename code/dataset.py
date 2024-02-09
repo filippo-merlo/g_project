@@ -335,6 +335,8 @@ class MyDataset():
 				if base_name_sim in name_set and base_name_dif in name_set:
 					base_names_sim.append(base_name_sim)
 					base_names_dif.append(base_name_dif)
+				else:
+					print(base_name_sim, base_name_dif)
 
 		else: # if the attribute is logical
 			while len(base_names_sim) < sim_batch: #133
@@ -365,6 +367,9 @@ class MyDataset():
 						if base_name_sim in name_set and base_name_dif in name_set:
 							base_names_sim.append(base_name_sim)
 							base_names_dif.append(base_name_dif)
+						else:
+							print(base_name_sim, base_name_dif)
+
 
 				elif 'or' in attribute.split():
 					if attribute1 == attribute2:
@@ -390,6 +395,8 @@ class MyDataset():
 							if base_name_sim in name_set and base_name_dif in name_set:
 								base_names_sim.append(base_name_sim)
 								base_names_dif.append(base_name_dif)
+							else:
+								print(base_name_sim, base_name_dif)
 
 					else:
 						for negative_case in range(3): # 0,1,2 [negatives]
@@ -419,6 +426,8 @@ class MyDataset():
 							if base_name_sim in name_set and base_name_dif in name_set:
 								base_names_sim.append(base_name_sim)
 								base_names_dif.append(base_name_dif)
+							else:
+								print(base_name_sim, base_name_dif)
 
 				elif 'not' in attribute.split():
 					for k, v in self.dic_without_logical.items(): # iterate on 'attribute_type':[list of attributes]
@@ -435,6 +444,8 @@ class MyDataset():
 					if base_name_sim in name_set and base_name_dif in name_set:
 						base_names_sim.append(base_name_sim)
 						base_names_dif.append(base_name_dif)
+					else:
+						print(base_name_sim, base_name_dif)
 
 		return base_names_sim, base_names_dif
 	

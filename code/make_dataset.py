@@ -34,28 +34,21 @@ def get_key_from_value(dictionary, target_value):
 # Build the dataset object
 def get_datasets(in_path,out_path):
     parameters_list = [
-        ['train_novel_obj', bn_train, ['rgba'], dic_train_logical],
-        ['test_novel_obj', bn_test, ['rgba'], dic_train_logical],
-        ['train_var', bn_train, ['rgba'], dic_train_logical],
-        ['test_var', bn_test, ['rgba'], dic_test_logical],
+        ['train', bn_train, ['rgba'], dic_train_logical, True, 'train_new_objects'],
+        ['train', bn_train, ['rgba'], dic_train_logical, False, 'train_var'],
     ]
+
     vocab = vocabs
 
     for parameters in parameters_list:
-        source, in_base, types, dic = parameters
-
-        if source == 'train_novel_obj':
-            train = True
-        else:
-            train = False
+        source, in_base, types, dic, train = parameters
 
         new_out_path = os.path.join(out_path, parameters[0]+'_dataset.json')
         save_list(new_out_path, []) ## After doing this one time, comment this line
         dt = MyDataset(in_path, source, in_base, types, dic, vocab)
         new_batches = []
 
-        for i, lesson in enumerate(all_vocabs):
-            print('Attr:',i/len(all_vocabs))
+        for i, lesson in tqdm(all_vocabs):
             attribute = get_key_from_value(dic_train_logical, lesson)
             
             for i in range(500):               
@@ -79,7 +72,3 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     get_datasets(args.in_path,args.out_path)
-
-
-
-

@@ -1,16 +1,17 @@
 #%%
 import os
-import pickle
+import json
 import clip 
 from config import *
 from dataset import MyDataset
 from util import *
+import argparse
 
 # Function to load a list from a file using pickle
 def load_list(file_path):
     try:
         with open(file_path, 'rb') as file:
-            data = pickle.load(file)
+            data = json.load(file)
         return data
     except FileNotFoundError:
         # If the file does not exist yet, return an empty list
@@ -19,7 +20,7 @@ def load_list(file_path):
 # Function to save a list to a file using pickle
 def save_list(file_path, data):
     with open(file_path, 'wb') as file:
-        pickle.dump(data, file)
+        json.dump(data, file)
 
 # Build the dataset object
 def get_datasets(in_path,out_path):
@@ -46,12 +47,31 @@ def get_datasets(in_path,out_path):
                  
                  for i in range(500):
                     print('Batches completed:',i/500,'%')
-                    base_names_sim, base_names_dif = dt.get_paired_batches_names(attribute, lesson, batch_size = 132)
+                    if source == 'train':
+                        train = True
+                    else:
+                        train = False
+                    base_names_sim, base_names_dif = dt.get_paired_batches_names(attribute, lesson, 132, train)
                     all_lessons = load_list(out_path)
                     all_lessons.append(
-                        [
-                        attribute,lesson,
-                        base_names_sim,base_names_dif
-                        ]
+                        {
+                        'attribute' : attribute,
+                        'lesson' : lesson,
+                        'base_names_sim' : base_names_sim,
+                        'base_names_sim' : base_names_dif
+                        }
                     )
                     save_list(out_path, all_lessons)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Get datasets')
+    parser.add_argument('--in_path', type=str, help='Path to the dataset')
+    parser.add_argument('--out_path', type=str, help='Path to the output')
+    args = parser.parse_args()
+    
+    get_datasets(args.in_path,args.out_path)
+
+
+
+

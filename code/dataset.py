@@ -39,7 +39,7 @@ class MyDataset():
 		# define a set of objects to remove
 		
 		self.name_set_filtered = self.name_set.copy()
-		for name in self.name_set_filtered:
+		for name in self.name_set:
 			split = name.split('_')
 			c = split[0]
 			m = split[1]

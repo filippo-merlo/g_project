@@ -57,9 +57,8 @@ def get_datasets(in_path,out_path):
             attribute = get_key_from_value(dic_train_logical, lesson)
             all_lessons = load_list(out_path)
             new_batches = []
-            for i in tqdm(range(500), desc="Batches", unit="batch"):               
+            for i in range(500):               
                 base_names_sim, base_names_dif = dt.get_paired_batches_names(attribute, lesson, 132, train)
-                
                 new_batches.append(
                     {
                     'attribute' : attribute,

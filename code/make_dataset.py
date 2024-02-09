@@ -49,8 +49,8 @@ def get_datasets(in_path,out_path):
         else:
             train = False
 
-        out_path = os.path.join(out_path, parameters[0]+'_dataset.json')
-        save_list(out_path, []) ## After doing this one time, comment this line
+        new_out_path = os.path.join(out_path, parameters[0]+'_dataset.json')
+        save_list(new_out_path, []) ## After doing this one time, comment this line
         dt = MyDataset(in_path, source, in_base, types, dic, vocab)
         new_batches = []
 
@@ -67,9 +67,9 @@ def get_datasets(in_path,out_path):
                     'base_names_sim' : base_names_dif
                     }
                 )
-        all_lessons = load_list(out_path)
+        all_lessons = load_list(new_out_path)
         all_lessons += new_batches
-        save_list(out_path, all_lessons)
+        save_list(new_out_path, all_lessons)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Get datasets')

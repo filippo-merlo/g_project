@@ -28,9 +28,6 @@ def get_key_from_value(dictionary, target_value):
     for key, value in dictionary.items():
         if value == target_value:
             return key
-    # If the target_value is not found in the dictionary, you can return a default value or raise an exception.
-    # In this example, None is returned if the value is not found.
-    return None
 
 # Build the dataset object
 def get_datasets(in_path,out_path):
@@ -53,8 +50,9 @@ def get_datasets(in_path,out_path):
         out_path = os.path.join(out_path, parameters[0]+'_dataset.json')
         save_list(out_path, []) ## After doing this one time, comment this line
         dt = MyDataset(in_path, source, in_base, types, dic, vocab)
-        pprint(dic_train_logical)
+
         for lesson in tqdm(all_vocabs, desc="Lessons", unit="lesson"):
+            print(lesson)
             attribute = get_key_from_value(dic_train_logical, lesson)
 
             for i in tqdm(range(500), desc="Batches", unit="batch"):               

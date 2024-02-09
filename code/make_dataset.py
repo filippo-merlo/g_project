@@ -6,6 +6,7 @@ from config import *
 from dataset import MyDataset
 from util import *
 import argparse
+from tqdm import tqdm
 
 # Function to load a list from a file using json
 def load_list(file_path):
@@ -43,32 +44,31 @@ def get_datasets(in_path,out_path):
 
     for parameters in parameters_list:
         source, in_base, types = parameters
+        if source == 'train':
+            train = True
+        else:
+            train = False
+
         out_path = os.path.join(out_path, parameters[0]+'_dataset.json')
         save_list(out_path, []) ## After doing this one time, comment this line
         dt = MyDataset(in_path, source, in_base, types, dic, vocab,
                             clip_preprocessor=clip_preprocessor)
         
-        for lesson in vocab:
+        for lesson in tqdm(vocab, desc="Lessons", unit="lesson"):
             attribute = get_key_from_value(dic, lesson)
 
-            for i in range(500):
-            print('Batches completed:',i/500,'%')
-            if source == 'train':
-                train = True
-            else:
-                train = False
-            base_names_sim, base_names_dif = dt.get_paired_batches_names(attribute, lesson, 132, train)
-            all_lessons = load_list(out_path)
-            all_lessons.append(
-                {
-                'attribute' : attribute,
-                'lesson' : lesson,
-                'base_names_sim' : base_names_sim,
-                'base_names_sim' : base_names_dif
-                }
-            )
-            save_list(out_path, all_lessons)
-
+            for i in tqdm(range(500), desc="Batches", unit="batch"):               
+                base_names_sim, base_names_dif = dt.get_paired_batches_names(attribute, lesson, 132, train)
+                all_lessons = load_list(out_path)
+                all_lessons.append(
+                    {
+                    'attribute' : attribute,
+                    'lesson' : lesson,
+                    'base_names_sim' : base_names_sim,
+                    'base_names_sim' : base_names_dif
+                    }
+                )
+                save_list(out_path, all_lessons)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Get datasets')

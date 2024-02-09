@@ -35,7 +35,7 @@ def get_datasets(in_path,out_path):
 
     for parameters in parameters_list:
         source, in_base, types = parameters
-        out_path = os.path.join(out_path, parameters[0]+'_dataset.pickle')
+        out_path = os.path.join(out_path, parameters[0]+'_dataset.json')
         dt = MyDataset(in_path, source, in_base, types, dic, vocab,
                             clip_preprocessor=clip_preprocessor)
         

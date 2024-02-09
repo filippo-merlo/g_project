@@ -52,11 +52,11 @@ def get_datasets(in_path,out_path):
         out_path = os.path.join(out_path, parameters[0]+'_dataset.json')
         save_list(out_path, []) ## After doing this one time, comment this line
         dt = MyDataset(in_path, source, in_base, types, dic, vocab)
+        new_batches = []
 
         for lesson in tqdm(all_vocabs, desc="Lessons", unit="lesson"):
             attribute = get_key_from_value(dic_train_logical, lesson)
-            all_lessons = load_list(out_path)
-            new_batches = []
+            
             for i in range(500):               
                 base_names_sim, base_names_dif = dt.get_paired_batches_names(attribute, lesson, 132, train)
                 new_batches.append(
@@ -67,8 +67,9 @@ def get_datasets(in_path,out_path):
                     'base_names_sim' : base_names_dif
                     }
                 )
-            all_lessons += new_batches
-            save_list(out_path, all_lessons)
+        all_lessons = load_list(out_path)
+        all_lessons += new_batches
+        save_list(out_path, all_lessons)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Get datasets')

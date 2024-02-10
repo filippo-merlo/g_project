@@ -58,7 +58,7 @@ def get_datasets(in_path,out_path):
                     'attribute' : attribute,
                     'lesson' : lesson,
                     'base_names_sim' : base_names_sim,
-                    'base_names_sim' : base_names_dif
+                    'base_names_dif' : base_names_dif
                     }
                 )
         all_lessons = load_list(new_out_path)
